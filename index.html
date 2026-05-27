@@ -1,0 +1,1786 @@
+<!DOCTYPE html>
+<html lang="fr" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <script>
+    window.onerror = function(message, source, lineno, colno, error) {
+        var errorLog = "ERROR: " + message + " at " + source + ":" + lineno + ":" + colno;
+        console.error(errorLog);
+        
+        // Ignore cross-origin script load errors or browser tracking prevention blocks
+        if (!source || source === "" || (lineno === 0 && colno === 0) || message.indexOf("Script error") !== -1) {
+            console.warn("Ignored benign cross-origin script error.");
+            return;
+        }
+        
+        if (document.body) {
+            var div = document.getElementById("err-dump");
+            if (!div) {
+                div = document.createElement("div");
+                div.id = "err-dump";
+                div.style.cssText = "color:red; font-size: 16px; padding: 15px; background: #fee2e2; border: 1px solid #ef4444; font-family: sans-serif; z-index:99999; position:fixed; top:10px; left:10px; right:10px; border-radius:8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);";
+                document.body.appendChild(div);
+            }
+            div.textContent = errorLog;
+        } else {
+            document.write('<div id="err-dump" style="color:red; font-size: 20px; padding: 20px; background: #fee2e2; border: 1px solid #ef4444; font-family: sans-serif; z-index:99999; position:relative;">' + errorLog + '</div>');
+        }
+    };
+    window.addEventListener('unhandledrejection', function(event) {
+        var errorLog = "UNHANDLED REJECTION: " + event.reason;
+        console.error(errorLog);
+        
+        if (event.reason && (String(event.reason).indexOf("Script error") !== -1 || String(event.reason).indexOf("extension") !== -1)) {
+            return;
+        }
+        
+        if (document.body) {
+            var div = document.getElementById("err-dump");
+            if (!div) {
+                div = document.createElement("div");
+                div.id = "err-dump";
+                div.style.cssText = "color:red; font-size: 16px; padding: 15px; background: #fee2e2; border: 1px solid #ef4444; font-family: sans-serif; z-index:99999; position:fixed; top:10px; left:10px; right:10px; border-radius:8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);";
+                document.body.appendChild(div);
+            }
+            div.textContent = errorLog;
+        } else {
+            document.write('<div id="err-dump" style="color:red; font-size: 20px; padding: 20px; background: #fee2e2; border: 1px solid #ef4444; font-family: sans-serif; z-index:99999; position:relative;">' + errorLog + '</div>');
+        }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Sport - الثانوية الذكية للتربية البدنية</title>
+    <!-- Fonts: Cairo (Arabic) & Outfit (French/English) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#10b981">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="logo.png">
+    <!-- SheetJS (xlsx) Excel Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body class="dark-theme" lang="fr">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <img src="logo.png" alt="Smart Sport Logo" class="app-logo">
+            <div class="logo-text">
+                <span class="logo-title">Smart Sport</span>
+                <span class="logo-subtitle" data-i18n="app-subtitle">التربية البدنية والرياضية</span>
+            </div>
+        </div>
+        
+        <nav class="sidebar-menu">
+            <a href="#dashboard" class="menu-item active" data-tab="dashboard">
+                <svg class="menu-icon" viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+                <span data-i18n="menu-dashboard">لوحة القيادة</span>
+            </a>
+            <a href="#classes" class="menu-item" data-tab="classes">
+                <svg class="menu-icon" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                <span data-i18n="menu-students">الأقسام والتلاميذ</span>
+            </a>
+            <a href="#grading" class="menu-item" data-tab="grading">
+                <svg class="menu-icon" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10H7v-2h10v2zm0-4H7V7h10v2zm0 8H7v-2h10v2z"/></svg>
+                <span data-i18n="menu-grading">التقويم والنتائج</span>
+            </a>
+            <a href="#pedagogical-tools" class="menu-item" data-tab="pedagogical-tools">
+                <svg class="menu-icon" viewBox="0 0 24 24"><path d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm-6-6h4V8H4v4zm6 0h4V8h-4v4zm6-4v4h4V4h-4zm0 8h4V8h-4v4zm0 8h4v-4h-4v4z"/></svg>
+                <span data-i18n="menu-pedagogical-tools">الوسائل البيداغوجية</span>
+            </a>
+            <a href="#pedagogical" class="menu-item" data-tab="pedagogical" style="border-right: 3px solid transparent; transition: all 0.3s ease;">
+                <svg class="menu-icon" viewBox="0 0 24 24" style="fill: currentColor;"><path d="M12 11.55C9.64 9.35 6.48 8 3 8v11c3.48 0 6.64 1.35 9 3.55 2.36-2.2 5.52-3.55 9-3.55V8c-3.48 0-6.64 1.35-9 3.55zM12 2c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3z"/></svg>
+                <span data-i18n="menu-pedagogical">الملف البيداغوجي</span>
+            </a>
+            <a href="#settings" class="menu-item" data-tab="settings">
+                <svg class="menu-icon" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+                <span data-i18n="menu-settings">إعدادات التطبيق</span>
+            </a>
+        </nav>
+
+        <!-- Sidebar Footer Action Toggles -->
+        <div class="sidebar-footer">
+            <button id="theme-toggle-btn" class="lang-btn">
+                <svg viewBox="0 0 24 24" class="menu-icon" id="theme-icon"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41l-1.06-1.06zm1.06-12.37c-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06c.39-.38.39-1.02 0-1.41zm-12.37 12.37c-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06c.39-.38.39-1.02 0-1.41z"/></svg>
+                <span id="theme-text">تغيير المظهر</span>
+            </button>
+            <button id="lang-toggle-btn" class="lang-btn">
+                <span>Français</span>
+            </button>
+            <div class="credits">
+                <span>Smart Sport v2.0</span>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content Wrapper -->
+    <main class="main-content">
+        
+        <!-- Header Bar: School metadata inputs, Undo, User guide, Backup buttons -->
+        <header class="main-header flex-column">
+            <!-- School profile fields (Premium Redesigned) -->
+            <div class="school-metadata-bar-premium">
+                <div class="meta-card-premium border-purple">
+                    <div class="meta-card-icon bg-purple-soft-glow">
+                        <svg viewBox="0 0 24 24" class="icon-purple"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5.89 12.55L12 15.74l6.11-3.19c.02.15.03.3.03.45 0 2.69-2.78 4.87-6.14 4.87-3.36 0-6.14-2.18-6.14-4.87 0-.15.01-.3.03-.45z"/></svg>
+                    </div>
+                    <div class="meta-card-content">
+                        <label for="meta-school-name" data-i18n="lbl-school">المؤسسة:</label>
+                        <input type="text" id="meta-school-name" class="premium-meta-input" placeholder="ثانوية...">
+                    </div>
+                </div>
+                <div class="meta-card-premium border-emerald">
+                    <div class="meta-card-icon bg-emerald-soft-glow">
+                        <svg viewBox="0 0 24 24" class="icon-emerald"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
+                    </div>
+                    <div class="meta-card-content">
+                        <label for="meta-teacher-name" data-i18n="lbl-teacher">الأستاذ:</label>
+                        <input type="text" id="meta-teacher-name" class="premium-meta-input" placeholder="أستاذ المادة...">
+                    </div>
+                </div>
+                <div class="meta-card-premium border-amber">
+                    <div class="meta-card-icon bg-amber-soft-glow">
+                        <svg viewBox="0 0 24 24" class="icon-amber"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/></svg>
+                    </div>
+                    <div class="meta-card-content">
+                        <label for="meta-academic-year" data-i18n="lbl-year">السنة الدراسية:</label>
+                        <input type="text" id="meta-academic-year" class="premium-meta-input" placeholder="2026/2027">
+                    </div>
+                </div>
+                <!-- App Header Branding next to Undo -->
+                <div class="header-brand-title-top" style="display: flex; align-items: center; gap: 8px; margin-right: auto; padding: 2px 10px;">
+                    <img src="logo.png" alt="Smart Sport Logo" style="width: 28px; height: 28px; border-radius: 6px; border: 1.5px solid var(--color-gold);">
+                    <span style="font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1.2rem; color: var(--text-primary);">Smart Sport</span>
+                </div>
+                <!-- Undo button -->
+                <button id="btn-undo-action" class="btn-premium-action btn-gradient-slate" title="تراجع عن الخطوة السابقة">
+                    <svg viewBox="0 0 24 24" style="width:16px;height:16px;"><path d="M12.5 8c-2.65 0-5.05.99-6.9 2.6L2 7v9h9l-3.62-3.62c1.39-1.16 3.16-1.88 5.12-1.88 3.54 0 6.55 2.31 7.6 5.5l2.37-.78C21.08 11.03 17.15 8 12.5 8z"/></svg>
+                    <span data-i18n="btn-undo">تراجع</span>
+                </button>
+            </div>
+
+            <!-- Action Links (Premium Redesigned) -->
+            <div class="header-action-links-premium mt-3">
+                <button id="btn-open-activities-config" class="btn-premium-action btn-gradient-amber" title="أول خطوة: إعداد الأنشطة الرياضية للفصول">
+                    <svg viewBox="0 0 24 24"><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/></svg>
+                    <span data-i18n="btn-config-activities">إعداد الأنشطة الرياضية للفصول</span>
+                </button>
+                <button id="btn-open-user-manual" class="btn-premium-action btn-gradient-cyan">
+                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 16h-2v-2h2v2zm0-4h-2V7h2v7z"/></svg>
+                    <span data-i18n="btn-guide">دليل المستخدم</span>
+                </button>
+                <button id="btn-open-scale-manager" class="btn-premium-action btn-gradient-emerald">
+                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                    <span data-i18n="btn-scales">تحميل وتعديل السلم</span>
+                </button>
+                <button id="btn-export-backup-hdr" class="btn-premium-action btn-gradient-purple">
+                    <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
+                    <span data-i18n="btn-export-backup">النسخة الاحتياطية</span>
+                </button>
+                <button id="btn-import-backup-hdr" class="btn-premium-action btn-gradient-blue">
+                    <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
+                    <span data-i18n="btn-import-backup">استعادة</span>
+                </button>
+                <button id="btn-archive-year" class="btn-premium-action btn-gradient-rose">
+                    <svg viewBox="0 0 24 24"><path d="M20.54 5.23l-1.39-1.68C18.88 3.21 18.47 3 18 3H6c-.47 0-.88.21-1.16.55L3.46 5.23C3.17 5.57 3 6.01 3 6.5V19c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6.5c0-.49-.17-.93-.46-1.27zM12 17.5L6.5 12H10v-3h4v3h3.5L12 17.5zM5.12 5l.82-1h12.06l.82 1H5.12z"/></svg>
+                    <span data-i18n="btn-archive">أرشيف وسنة جديدة</span>
+                </button>
+            </div>
+            
+            <div class="header-search-n-info w-full mt-4">
+                <h1 id="page-title" class="page-title" data-i18n="title-dashboard">لوحة القيادة</h1>
+                <div class="quick-status-bar">
+                    <div class="status-item">
+                        <span class="status-label" data-i18n="status-classes">الأقسام:</span>
+                        <span id="global-stat-classes" class="status-val">0</span>
+                    </div>
+                    <div class="status-separator"></div>
+                    <div class="status-item">
+                        <span class="status-label" data-i18n="status-students">التلاميذ:</span>
+                        <span id="global-stat-students" class="status-val">0</span>
+                    </div>
+                    <div class="status-separator"></div>
+                    <div class="status-item">
+                        <span class="status-label" data-i18n="status-attendance">الحضور السنوي:</span>
+                        <span id="global-stat-attendance" class="status-val">0%</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- View Content Area -->
+        <div class="view-container">
+
+            <!-- Official Printable Header (Visible only on print) -->
+            <div class="print-official-header">
+                <div class="print-country-title">الجمهورية الجزائرية الديمقراطية الشعبية</div>
+                <div class="print-ministry-title">وزارة التربية الوطنية</div>
+                <div class="print-meta-grid">
+                    <div class="print-meta-right">
+                        <div>مديرية التربية لولاية: <span id="print-school-wilaya">--</span></div>
+                        <div>المؤسسة: <span id="print-school-name">--</span></div>
+                    </div>
+                    <div class="print-meta-left">
+                        <div>أستاذ المادة: <span id="print-teacher-name">--</span></div>
+                        <div>السنة الدراسية: <span id="print-academic-year">--</span></div>
+                    </div>
+                </div>
+                <h2 class="print-doc-title">كشف تقويم نتائج التربية البدنية والرياضية - <span id="print-term-number">--</span></h2>
+                <div class="print-doc-subtitle">القسم: <span id="print-class-name">--</span></div>
+            </div>
+
+            <!-- 1. DASHBOARD VIEW -->
+            <section id="view-dashboard" class="app-view active">
+                <div class="stats-grid">
+                    <div class="stat-card card-glow-emerald">
+                        <div class="card-icon-container bg-emerald-soft">
+                            <svg viewBox="0 0 24 24" class="card-icon color-emerald"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                        </div>
+                        <div class="card-details">
+                            <span class="card-label" data-i18n="dash-total-classes">إجمالي الأقسام</span>
+                            <span id="dash-stat-classes" class="card-value">0</span>
+                        </div>
+                    </div>
+                    <div class="stat-card card-glow-gold">
+                        <div class="card-icon-container bg-gold-soft">
+                            <svg viewBox="0 0 24 24" class="card-icon color-gold"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.44 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                        </div>
+                        <div class="card-details">
+                            <span class="card-label" data-i18n="dash-total-students">إجمالي التلاميذ</span>
+                            <span id="dash-stat-students" class="card-value">0</span>
+                        </div>
+                    </div>
+                    <div class="stat-card card-glow-blue">
+                        <div class="card-icon-container bg-blue-soft">
+                            <svg viewBox="0 0 24 24" class="card-icon color-blue"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+                        </div>
+                        <div class="card-details">
+                            <span class="card-label" data-i18n="dash-avg-attendance">نسبة الحضور</span>
+                            <span id="dash-stat-attendance" class="card-value">0%</span>
+                        </div>
+                    </div>
+                    <div class="stat-card card-glow-purple">
+                        <div class="card-icon-container bg-purple-soft">
+                            <svg viewBox="0 0 24 24" class="card-icon color-purple"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.75z"/></svg>
+                        </div>
+                        <div class="card-details">
+                            <span class="card-label" data-i18n="dash-avg-grade">المعدل السنوي للمادة</span>
+                            <span id="dash-stat-average" class="card-value">--/20</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <!-- Class Performance Leaderboard -->
+                    <div class="panel flex-2">
+                        <div class="panel-header">
+                            <h2 class="panel-title" data-i18n="dash-panel-leaderboard">ترتيب الأقسام حسب النتائج</h2>
+                        </div>
+                        <div class="panel-content">
+                            <div class="table-responsive">
+                                <table class="interactive-table">
+                                    <thead>
+                                        <tr>
+                                            <th data-i18n="th-class">القسم الدراسي</th>
+                                            <th data-i18n="th-students-count">عدد التلاميذ</th>
+                                            <th data-i18n="th-attendance">نسبة الحضور</th>
+                                            <th data-i18n="th-avg-score">معدل القسم السنوي</th>
+                                            <th data-i18n="th-actions">الإجراءات</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="dashboard-leaderboard-tbody">
+                                        <!-- Dynamically populated -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Guidance Pédagogique -->
+                    <div class="panel flex-1 sidebar-panel">
+                        <div class="panel-header">
+                            <h2 class="panel-title" data-i18n="dash-panel-info">التوجيه البيداغوجي اليومي</h2>
+                        </div>
+                        <div class="panel-content text-content">
+                            <div class="motivational-banner">
+                                <div class="banner-overlay"></div>
+                                <h3 data-i18n="dash-quote-title">الرياضة المدرسية</h3>
+                                <p data-i18n="dash-quote-text">"العقل السليم في الجسم السليم. تساهم التربية البدنية والرياضية في بناء شخصية التلميذ، تعزيز الانضباط، وتطوير المهارات البدنية والاجتماعية في الأقسام الثانوية."</p>
+                            </div>
+                            <div class="quick-actions-panel">
+                                <h4 data-i18n="dash-quick-links">روابط سريعة</h4>
+                                <div class="quick-links-grid">
+                                    <button class="quick-link-btn" onclick="app.switchTab('classes')">
+                                        <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                                        <span data-i18n="btn-add-student">إضافة تلميذ</span>
+                                    </button>
+                                    <button class="quick-link-btn" onclick="app.switchTab('grading')">
+                                        <svg viewBox="0 0 24 24"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg>
+                                        <span data-i18n="btn-evaluate">تقييم الأقسام</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. CLASSES & STUDENTS VIEW -->
+            <section id="view-classes" class="app-view">
+                <!-- Unified Class & Student Roster Operations Toolbar -->
+                <div class="premium-toolbar">
+                    <!-- Class Selector -->
+                    <div class="toolbar-class-select-group">
+                        <label for="class-select-roster" data-i18n="lbl-select-class">القسم الدراسي:</label>
+                        <select id="class-select-roster" class="styled-select-premium"></select>
+                    </div>
+                    
+                    <div class="toolbar-divider"></div>
+                    
+                    <!-- Class Setup Actions -->
+                    <div class="toolbar-actions-group">
+                        <button id="btn-open-add-class" class="btn-circle-premium btn-emerald-glow" title="إضافة قسم جديد">
+                            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                        </button>
+                        <button id="btn-delete-class" class="btn-circle-premium btn-danger-glow" title="حذف هذا القسم بالكامل">
+                            <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                        </button>
+                    </div>
+                    
+                    <div class="toolbar-divider"></div>
+                    
+                    <!-- Student Management & Data Actions -->
+                    <div class="toolbar-actions-group flex-grow">
+                        <button id="btn-open-add-student" class="btn-premium-gradient btn-gradient-emerald" title="إضافة تلميذ جديد">
+                            <svg viewBox="0 0 24 24"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                            <span data-i18n="btn-new-student">تلميذ جديد</span>
+                        </button>
+                        <button id="btn-open-import-csv" class="btn-premium-gradient btn-gradient-amber" title="استيراد تلاميذ من ملف إكسل">
+                            <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+                            <span data-i18n="btn-import-excel">استيراد إكسل</span>
+                        </button>
+                        <button id="btn-export-all-grades-pdf" class="btn-danger-premium" title="تصدير كشوف نقاط جميع الأقسام بصيغة PDF للطباعة">
+                            <svg viewBox="0 0 24 24"><path d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8.5 7.5c0 .83-.67 1.5-1.5 1.5H9v2H7.5V7H10c.83 0 1.5.67 1.5 1.5v1zm5 2c0 .83-.67 1.5-1.5 1.5h-2.5V7H15c.83 0 1.5.67 1.5 1.5v3zm4-3H19v1h1.5V11H19v2h-1.5V7h3v1.5zM9 9.5h1v-1H9v1zM4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm10 5.5h1v-3h-1v3z"/></svg>
+                            <span>📄 تصدير نقاط الأقسام (PDF)</span>
+                        </button>
+                        <button id="btn-export-all-grades-excel" class="btn-emerald-premium" title="تصدير كشوف نقاط جميع الأقسام بصيغة Excel">
+                            <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-3.9 10.5l-2.1-2.1 2.1-2.1-1.4-1.4-2.1 2.1-2.1-2.1-1.4 1.4 2.1 2.1-2.1 2.1 1.4 1.4 2.1-2.1 2.1 2.1 1.4-1.4z"/></svg>
+                            <span>📊 تصدير نقاط الأقسام (Excel)</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header roster-header">
+                        <div class="roster-info-widgets" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+                            <div>
+                                <h2 class="panel-title"><span data-i18n="roster-panel-title">قائمة تلاميذ القسم:</span> <span id="roster-class-name" class="highlight-text">--</span></h2>
+                                <div class="roster-stats" style="margin-top: 10px;">
+                                    <span class="badge badge-emerald"><span data-i18n="badge-boys">ذكور:</span> <span id="roster-stat-boys">0</span></span>
+                                    <span class="badge badge-pink"><span data-i18n="badge-girls">إناث:</span> <span id="roster-stat-girls">0</span></span>
+                                    <span class="badge badge-amber"><span data-i18n="badge-exempted">إعفاء كلي:</span> <span id="roster-stat-exempted">0</span></span>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                <button type="button" id="btn-export-csv" class="btn-emerald-premium" title="تصدير قائمة تلاميذ القسم الحالي إلى ملف Excel" style="border: 1px solid rgba(255, 255, 255, 0.1); cursor: pointer; text-decoration: none;">
+                                    <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
+                                    <span>📊 تصدير القسم الحالي (Excel)</span>
+                                </button>
+                                <button type="button" id="btn-export-all-classes" class="btn-blue-premium" title="تصدير قوائم تلاميذ جميع الأقسام إلى ملف Excel" style="border: 1px solid rgba(255, 255, 255, 0.1); cursor: pointer; text-decoration: none;">
+                                    <svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+                                    <span>🗂️ تصدير كل الأقسام (Excel)</span>
+                                </button>
+                                <button type="button" id="btn-delete-selected-students" class="btn" style="font-size: 0.8rem; padding: 6px 12px; background: #ef4444; color: white; display: none; align-items: center; gap: 5px; border: none; border-radius: 6px;">
+                                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                                    Ø­Ø°Ù Ø§Ù„Ù…Ø­Ø¯Ø¯
+                                </button>
+                            </div>
+                        </div>
+                        <div class="roster-search" style="margin-top: 15px;">
+                            <input type="text" id="roster-search-input" class="styled-input" placeholder="بحث باسم التلميذ...">
+                        </div>
+                    </div>
+                    <div class="panel-content">
+                        <div class="table-responsive">
+                            <table class="interactive-table students-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 40px; text-align: center;">
+                                            <input type="checkbox" id="cb-select-all-students" style="transform: scale(1.2); cursor: pointer;">
+                                        </th>
+                                        <th style="width: 60px;" class="col-hdr-index">#</th>
+                                        <th class="col-hdr-lastname" data-i18n="th-student-lastname">اللقب</th>
+                                        <th class="col-hdr-firstname" data-i18n="th-student-firstname">الاسم</th>
+                                        <th class="col-hdr-gender" data-i18n="th-gender">الجنس</th>
+                                        <th class="col-hdr-birth" data-i18n="th-birthdate">تاريخ الميلاد</th>
+                                        <th class="col-hdr-phone" data-i18n="th-student-phone">رقم هاتف الولي</th>
+                                        <th class="col-hdr-exempt" data-i18n="th-exemptions-status">الإعفاءات (ف1/ف2/ف3)</th>
+                                        <th style="width: 250px;" class="col-hdr-actions" data-i18n="th-actions">الإجراءات</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="roster-students-tbody">
+                                    <!-- Populated dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. GRADING & EVALUATION VIEW -->
+            <section id="view-grading" class="app-view">
+                <div class="action-bar-top flex-wrap">
+                    <div class="form-group flex-1 min-w-150">
+                        <label for="class-select-grading" data-i18n="lbl-select-class">القسم الدراسي:</label>
+                        <select id="class-select-grading" class="styled-select"></select>
+                    </div>
+                    <div class="form-group flex-1 min-w-150">
+                        <label for="term-select-grading" data-i18n="lbl-select-term">الفصل الدراسي:</label>
+                        <select id="term-select-grading" class="styled-select">
+                            <option value="1" data-i18n="term-1">الفصل الأول</option>
+                            <option value="2" data-i18n="term-2">الفصل الثاني</option>
+                            <option value="3" data-i18n="term-3">الفصل الثالث</option>
+                            <option value="annual">الفصل السنوي</option>
+                        </select>
+                    </div>
+                    <!-- Sports display for this term -->
+                    <!-- Sports display for this term (Premium Redesigned) -->
+                    <div class="sports-display-info-premium">
+                        <div class="sport-card-premium card-ind-sport">
+                            <div class="sport-icon-container">
+                                <svg viewBox="0 0 24 24" class="sport-svg"><path d="M13.49 5.48c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm-3.6 13.9l1-4.4 2.1 2v6h2v-7.5l-2.1-2 .6-3c1.3 1.5 3.3 2.5 5.5 2.5v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5.1-.8.1L6 8.3V13h2V9.6l1.8-.7-.7 3.8-3.4 3.2 1.4 1.4 3.3-3.2z"/></svg>
+                            </div>
+                            <div class="sport-card-details">
+                                <span class="sport-label" data-i18n="lbl-ind-sport">النشاط الفردي</span>
+                                <span id="grading-ind-sport-name" class="sport-value">--</span>
+                            </div>
+                        </div>
+                        <div class="sport-card-premium card-col-sport">
+                            <div class="sport-icon-container">
+                                <svg viewBox="0 0 24 24" class="sport-svg"><path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-4-8c.73 0 1.37-.4 1.72-1H10V8H8v1h-.28c-.35-.6-.99-1-1.72-1C4.9 8 4 8.9 4 10s.9 2 2 2zm8 0c.73 0 1.37-.4 1.72-1H18V8h-2v1h-.28c-.35-.6-.99-1-1.72-1-1.1 0-2 .9-2 2s.9 2 2 2zm-4 4c-1.1 0-2-.9-2-2H8c0 1.73 1.37 3.12 3.12 3.45V19h1.76v-1.55c1.75-.33 3.12-1.72 3.12-3.45h-2c0 1.1-.9 2-2 2z"/></svg>
+                            </div>
+                            <div class="sport-card-details">
+                                <span class="sport-label" data-i18n="lbl-col-sport">النشاط الجماعي</span>
+                                <span id="grading-col-sport-name" class="sport-value">--</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="buttons-row flex-1 justify-end self-end" style="display: flex; gap: 10px; align-items: center;">
+                        <button id="btn-lock-grading" class="btn btn-secondary" style="display: flex; align-items: center; gap: 8px;">
+                            <span id="btn-lock-grading-text">🔒 قفل وتجميد نقاط الفصل</span>
+                        </button>
+                        <button id="btn-export-ministry" class="btn btn-indigo" style="display: flex; align-items: center; gap: 8px;">
+                            <span>📤 تصدير القائمة الشاملة للإدارة</span>
+                        </button>
+                        <button id="btn-save-grading" class="btn btn-primary">
+                            <svg viewBox="0 0 24 24"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
+                            <span data-i18n="btn-save-all-grades">حفظ النقاط</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Grading Evaluation Type Tabs (Continuous, Assignment, Exam) -->
+                <div class="grading-tabs-container">
+                    <button class="grading-tab-btn active" data-eval="continuous" data-i18n="menu-continuous">المراقبة المستمرة</button>
+                    <button class="grading-tab-btn" data-eval="assignment" data-i18n="menu-assignment">الفرض</button>
+                    <button class="grading-tab-btn" data-eval="exam" data-i18n="menu-exam">الاختبار</button>
+                    <button class="grading-tab-btn" data-eval="term-summary" data-i18n="menu-summary">كشف الفصل الحالي</button>
+                </div>
+
+                <div class="panel">
+                <div class="panel-header roster-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                        <h2 class="panel-title" id="grading-panel-title-text">جدول تنقيط المراقبة المستمرة</h2>
+                        <div style="display: flex; gap: 10px;">
+                            <button id="btn-print-grading-sheet" class="btn btn-secondary" style="padding: 6px 14px; font-size: 0.75rem; border-radius: 4px; display: flex; align-items: center; gap: 5px;">
+                                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/></svg>
+                                <span>طباعة كشف النقاط</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="panel-content">
+                        <div class="table-responsive">
+                            <table class="interactive-table grading-table" id="table-grading-sheet">
+                                <!-- Dynamic headers and rows populated in app.js -->
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3.5 SPRINT STOPWATCH VIEW (NEW FEATURE) -->
+            <!-- 3.5 PEDAGOGICAL TOOLS VIEW (STOPWATCH & LOTTERY COMBINED) -->
+            <section id="view-pedagogical-tools" class="app-view">
+                <!-- Sub-tabs switcher segmented control -->
+                <div class="pedagogical-tools-header" style="margin-bottom: 25px; margin-top: 5px;">
+                    <div class="tools-switcher" style="display: flex; gap: 10px; background: rgba(30, 41, 59, 0.4); padding: 6px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.08); max-width: 520px; margin: 0 auto;">
+                        <button class="mode-tab active" id="btn-tool-stopwatch" data-tool="stopwatch" style="display: flex; align-items: center; justify-content: center; gap: 8px; flex: 1;">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M15 1H9v2h6V1zm-4 13h2V8h-2v6zm8.03-6.61l1.42-1.42c-.43-.51-.9-.99-1.41-1.41l-1.42 1.42C16.07 4.74 14.12 4 12 4c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-2.12-.74-4.07-1.97-5.61zM12 20c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/></svg>
+                            <span data-i18n="menu-stopwatch">الميقاتي الذكي</span>
+                        </button>
+                        <button class="mode-tab" id="btn-tool-lottery" data-tool="lottery" style="display: flex; align-items: center; justify-content: center; gap: 8px; flex: 1;">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="fill:none;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"></circle><circle cx="15.5" cy="15.5" r="1.5" fill="currentColor"></circle><circle cx="15.5" cy="8.5" r="1.5" fill="currentColor"></circle><circle cx="8.5" cy="15.5" r="1.5" fill="currentColor"></circle><circle cx="12" cy="12" r="1.5" fill="currentColor"></circle></svg>
+                            <span data-i18n="menu-lottery">القرعة البيداغوجية</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Sub-view 1: Smart Stopwatch -->
+                <div id="tool-stopwatch-container">
+                    <div class="stopwatch-container">
+                        <!-- Configuration Panel -->
+                        <div class="panel settings-panel-premium" style="margin-bottom: 20px; padding: 20px;">
+                            <div style="display: flex; flex-wrap: wrap; gap: 15px; align-items: flex-end;">
+                                <div class="form-group" style="flex: 1; min-width: 150px;">
+                                    <label for="stopwatch-class-select" style="font-weight: bold; color: var(--text-secondary); margin-bottom: 6px; display: block;">القسم الدراسي / الفوج:</label>
+                                    <select id="stopwatch-class-select" class="styled-select" style="width: 100%;"></select>
+                                </div>
+                                <div class="form-group" style="flex: 1; min-width: 120px;">
+                                    <label for="stopwatch-term-select" style="font-weight: bold; color: var(--text-secondary); margin-bottom: 6px; display: block;">الفصل الدراسي:</label>
+                                    <select id="stopwatch-term-select" class="styled-select" style="width: 100%;">
+                                        <option value="1">الفصل الأول</option>
+                                        <option value="2">الفصل الثاني</option>
+                                        <option value="3">الفصل الثالث</option>
+                                    </select>
+                                </div>
+                                <div class="form-group" style="flex: 1; min-width: 120px;">
+                                    <label for="stopwatch-eval-type-select" style="font-weight: bold; color: var(--text-secondary); margin-bottom: 6px; display: block;">نوع التقييم:</label>
+                                    <select id="stopwatch-eval-type-select" class="styled-select" style="width: 100%;">
+                                        <option value="assignment">الفرض</option>
+                                        <option value="exam">الاختبار</option>
+                                    </select>
+                                </div>
+                                <div class="form-group" style="flex: 1; min-width: 120px;">
+                                    <label for="stopwatch-attempt-select" style="font-weight: bold; color: var(--text-secondary); margin-bottom: 6px; display: block;">المحاولة المستهدفة:</label>
+                                    <select id="stopwatch-attempt-select" class="styled-select" style="width: 100%;">
+                                        <option value="1">المحاولة الأولى (1)</option>
+                                        <option value="2">المحاولة الثانية (2)</option>
+                                        <option value="3">المحاولة الثالثة (3)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Mode Switcher Tab Selector -->
+                            <div class="stopwatch-mode-selector" style="margin-top: 20px;">
+                                <button class="mode-tab active" id="btn-stopwatch-mode-multi" data-mode="multi">
+                                    👥 كرونومتر متعدد - 4 حارات
+                                </button>
+                                <button class="mode-tab" id="btn-stopwatch-mode-single" data-mode="single">
+                                    👤 كرونومتر فردي - تلميذ واحد
+                                </button>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="buttons-row" style="display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap;">
+                                <button id="btn-stopwatch-start-all" class="btn btn-emerald" style="display: flex; align-items: center; gap: 8px;">
+                                    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                                    <span>بدء التشغيل المتزامن</span>
+                                </button>
+                                <button id="btn-stopwatch-reset-all" class="btn btn-secondary" style="display: flex; align-items: center; gap: 8px;">
+                                    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+                                    <span>إعادة تعيين الجميع</span>
+                                </button>
+                                <button id="btn-stopwatch-whistle" class="btn btn-warning" style="display: flex; align-items: center; gap: 8px;">
+                                    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98-.44-1.9-1.07-2.69-1.85-.78-.79-1.41-1.71-1.85-2.69-.44-.06-.9-.1-1.36-.1zm0 2c3.87 0 7 3.13 7 7s-3.13 7-7 7-7-3.13-7-7 3.13-7 7-7z"/></svg>
+                                    <span>تفعيل كشف الصافرة</span>
+                                </button>
+                                <button id="btn-stopwatch-save" class="btn btn-primary" style="margin-right: auto; display: flex; align-items: center; gap: 8px;">
+                                    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
+                                    <span>💾 ترحيل وحفظ علامات الفوج تلقائياً</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Multi-Lane View Grid -->
+                        <div id="stopwatch-multi-container" class="stopwatch-grid-multi">
+                            <!-- Lane 1 -->
+                            <div id="stopwatch-lane-1-card" class="lane-card">
+                                <span class="lane-title">الحارة 1</span>
+                                <select id="stopwatch-lane-1-student" class="lane-student-select styled-select" data-lane="0">
+                                    <option value="">-- اختر التلميذ --</option>
+                                </select>
+                                <div id="stopwatch-lane-1-display" class="lane-timer-display">00:00.00</div>
+                                <div class="lane-touch-pad" data-lane="0">إيقاف / تجميد (VolumeUp)</div>
+                            </div>
+
+                            <!-- Lane 2 -->
+                            <div id="stopwatch-lane-2-card" class="lane-card">
+                                <span class="lane-title">الحارة 2</span>
+                                <select id="stopwatch-lane-2-student" class="lane-student-select styled-select" data-lane="1">
+                                    <option value="">-- اختر التلميذ --</option>
+                                </select>
+                                <div id="stopwatch-lane-2-display" class="lane-timer-display">00:00.00</div>
+                                <div class="lane-touch-pad" data-lane="1">إيقاف / تجميد (VolumeDown)</div>
+                            </div>
+
+                            <!-- Lane 3 -->
+                            <div id="stopwatch-lane-3-card" class="lane-card">
+                                <span class="lane-title">الحارة 3</span>
+                                <select id="stopwatch-lane-3-student" class="lane-student-select styled-select" data-lane="2">
+                                    <option value="">-- اختر التلميذ --</option>
+                                </select>
+                                <div id="stopwatch-lane-3-display" class="lane-timer-display">00:00.00</div>
+                                <div class="lane-touch-pad" data-lane="2">إيقاف / تجميد</div>
+                            </div>
+
+                            <!-- Lane 4 -->
+                            <div id="stopwatch-lane-4-card" class="lane-card">
+                                <span class="lane-title">الحارة 4</span>
+                                <select id="stopwatch-lane-4-student" class="lane-student-select styled-select" data-lane="3">
+                                    <option value="">-- اختر التلميذ --</option>
+                                </select>
+                                <div id="stopwatch-lane-4-display" class="lane-timer-display">00:00.00</div>
+                                <div class="lane-touch-pad" data-lane="3">إيقاف / تجميد</div>
+                            </div>
+                        </div>
+
+                        <!-- Single-Lane View Container (hidden by default) -->
+                        <div id="stopwatch-single-container" style="display: none; margin-top: 20px;">
+                            <div id="stopwatch-single-card" class="lane-card" style="min-height: 400px; padding: 30px;">
+                                <span class="lane-title" style="font-size: 1.5rem;">تلميذ واحد</span>
+                                <select id="stopwatch-single-student" class="lane-student-select styled-select" data-lane="0" style="max-width: 400px; width: 100%; margin: 10px 0;">
+                                    <option value="">-- اختر التلميذ --</option>
+                                </select>
+                                <div id="stopwatch-single-display" class="lane-timer-display font-giant">00:00.00</div>
+                                <div class="lane-touch-pad pad-giant" data-lane="0" style="min-height: 180px; font-size: 1.3rem;">إيقاف / تجميد (اضغط هنا أو زر الصوت)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sub-view 2: Pedagogical Lottery -->
+                <div id="tool-lottery-container" style="display: none;">
+                    <div class="settings-container-premium">
+                        <div class="panel settings-panel-premium card-glow-indigo">
+                            <div class="panel-content settings-content-premium text-center" style="padding: 30px;">
+                                
+                                <!-- Context selectors in lottery: Class and Term -->
+                                <div class="form-row" style="display: flex; gap: 15px; max-width: 500px; margin: 0 auto 25px auto; flex-wrap: wrap;">
+                                    <div class="form-group flex-1" style="min-width: 200px;">
+                                        <label for="lottery-class-select" style="font-weight: 800; font-size: 1rem; display: block; margin-bottom: 8px; text-align: right;" data-i18n="lbl-select-class">اختر القسم الدراسي:</label>
+                                        <select id="lottery-class-select" class="styled-select-premium" style="width: 100%; font-weight: 700; font-size: 1rem; padding: 10px;"></select>
+                                    </div>
+                                    <div class="form-group flex-1" style="min-width: 200px;">
+                                        <label for="lottery-term-select" style="font-weight: 800; font-size: 1rem; display: block; margin-bottom: 8px; text-align: right;" data-i18n="lbl-select-term">الفصل الدراسي:</label>
+                                        <select id="lottery-term-select" class="styled-select-premium" style="width: 100%; font-weight: 700; font-size: 1rem; padding: 10px;">
+                                            <option value="1">الفصل الأول</option>
+                                            <option value="2">الفصل الثاني</option>
+                                            <option value="3">الفصل الثالث</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Pool Counter -->
+                                <div class="pool-status-container" style="margin-bottom: 30px;">
+                                    <span id="lottery-pool-counter" class="lottery-panel-text" style="font-size: 1.3rem; color: var(--text-secondary); background: rgba(255,255,255,0.05); padding: 8px 20px; border-radius: 20px; border: 1.5px solid var(--border-color); display: inline-block;">
+                                        المتبقون في القرعة: --/--
+                                    </span>
+                                </div>
+
+                                <!-- Big Tactical Draw Button -->
+                                <div style="margin-bottom: 40px;">
+                                    <button id="btn-lottery-draw" class="btn btn-indigo lottery-panel-text" style="font-size: 1.4rem; padding: 18px 40px; border-radius: 16px; width: 100%; max-width: 400px; margin: 0 auto; display: flex; align-items: center; justify-content: center; gap: 12px;">
+                                        <span data-i18n="btn-lottery-draw">🎲 إجراء القرعة البيداغوجية</span>
+                                    </button>
+                                </div>
+
+                                <!-- Massive Neon-Glowing Winner Container -->
+                                <div id="lottery-winner-container" class="winner-glow-box" style="display: none; margin: 30px auto; max-width: 600px; padding: 30px; border-radius: 16px; background: rgba(99, 102, 241, 0.08); border: 2px solid #6366f1;">
+                                    <div style="font-size: 1.3rem; font-weight: 800; color: #818cf8; margin-bottom: 12px;" id="lottery-winner-header" data-i18n="lottery-winner-header">🎯 التلميذ القادم:</div>
+                                    <div id="lottery-winner-name" style="font-size: 2.8rem; font-weight: 900; color: #ffffff; text-shadow: 0 0 15px rgba(255, 255, 255, 0.6), 0 0 30px #6366f1; padding: 10px 0; line-height: 1.2;">--</div>
+                                </div>
+
+                                <!-- Complete / Empty Message -->
+                                <div id="lottery-empty-message" class="lottery-panel-text" style="display: none; font-size: 1.5rem; color: var(--color-danger); margin: 30px auto; max-width: 500px; padding: 25px; background: rgba(239, 68, 68, 0.08); border: 2px dashed #ef4444; border-radius: 12px;" data-i18n="lottery-completed">
+                                    [ 🏁 اكتملت المحاولات لجميع الحاضرين ]
+                                </div>
+
+                                <!-- Reset Button -->
+                                <div style="margin-top: 30px;">
+                                    <button id="btn-lottery-reset" class="btn btn-secondary lottery-panel-text" style="font-size: 1.05rem; padding: 12px 28px; border-radius: 10px; border: 1.5px solid var(--border-color);" data-i18n="btn-lottery-reset">
+                                        🔄 إعادة ضبط القرعة للجميع
+                                    </button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. SETTINGS VIEW (Redesigned Premium Arabic) -->
+            <section id="view-settings" class="app-view">
+                <div class="settings-container-premium">
+                    
+                    <!-- 1. School Metadata Card -->
+                    <div class="panel settings-panel-premium card-glow-emerald">
+                        <div class="panel-header">
+                            <h2 class="panel-title-premium">
+                                <svg viewBox="0 0 24 24" class="panel-title-icon icon-emerald"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5.89 12.55L12 15.74l6.11-3.19c.02.15.03.3.03.45 0 2.69-2.78 4.87-6.14 4.87-3.36 0-6.14-2.18-6.14-4.87 0-.15.01-.3.03-.45z"/></svg>
+                                <span>بيانات المؤسسة والترويسة الرسمية للطباعة</span>
+                            </h2>
+                        </div>
+                        <div class="panel-content settings-content-premium">
+                            <div class="setting-row-premium" style="display: block; border: none; padding: 0;">
+                                <div class="form-row w-full">
+                                    <div class="form-group flex-1">
+                                        <label for="settings-school-name">اسم الثانوية / المؤسسة:</label>
+                                        <input type="text" id="settings-school-name" class="styled-input" placeholder="ثانوية...">
+                                    </div>
+                                    <div class="form-group flex-1">
+                                        <label for="settings-school-wilaya">الولاية / مديرية التربية:</label>
+                                        <input type="text" id="settings-school-wilaya" class="styled-input" placeholder="مثال: مديرية التربية لولاية الجزائر غرب">
+                                    </div>
+                                </div>
+                                <div class="form-row w-full mt-2">
+                                    <div class="form-group flex-1">
+                                        <label for="settings-teacher-name">اسم أستاذ المادة:</label>
+                                        <input type="text" id="settings-teacher-name" class="styled-input" placeholder="أستاذ المادة...">
+                                    </div>
+                                    <div class="form-group flex-1">
+                                        <label for="settings-academic-year">السنة الدراسية:</label>
+                                        <input type="text" id="settings-academic-year" class="styled-input" placeholder="2026/2027">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="buttons-row justify-end mt-2">
+                                <button id="btn-save-settings-meta" class="btn btn-primary" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); border: none;">
+                                    <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;margin-left:5px;"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
+                                    <span>حفظ بيانات الترويسة</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. Messaging Customization Card -->
+                    <div class="panel settings-panel-premium card-glow-gold mt-4">
+                        <div class="panel-header">
+                            <h2 class="panel-title-premium">
+                                <svg viewBox="0 0 24 24" class="panel-title-icon icon-amber"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm0-3h12v2H6V6zm0 6h9v2H6v-2z"/></svg>
+                                <span>تخصيص قوالب رسائل أولياء الأمور حسب النتائج (SMS / WhatsApp)</span>
+                            </h2>
+                        </div>
+                        <div class="panel-content settings-content-premium">
+                            <div class="setting-row-premium" style="display: block; border: none; padding: 0;">
+                                <p class="setting-desc-text">قم بتخصيص قوالب الرسائل المرسلة لأولياء الأمور بناءً على علامة أو معدل التلميذ. المتغيرات المتاحة:
+                                    <br>• <strong>{الاسم}</strong>: اسم التلميذ، <strong>{المؤسسة}</strong>: اسم المؤسسة، <strong>{السنة}</strong>: السنة الدراسية.
+                                    <br>• <strong>{ف1}</strong>، <strong>{ف2}</strong>، <strong>{ف3}</strong>: معدلات الفصول، <strong>{السنوي}</strong>: المعدل السنوي العام.
+                                </p>
+                            </div>
+                            
+                            <div class="form-row mt-4">
+                                <div class="form-group flex-1">
+                                    <label class="font-bold text-xs" style="color: #3b82f6;" for="settings-msg-excellent">1. قالب تهنئة (المعدل السنوي الممتاز >= 16):</label>
+                                    <textarea id="settings-msg-excellent" class="styled-input w-full" style="min-height: 90px; font-family: inherit; font-size: 0.8rem; line-height: 1.5; direction: rtl;" placeholder="أدخل رسالة التهنئة..."></textarea>
+                                </div>
+                                <div class="form-group flex-1">
+                                    <label class="font-bold text-xs" style="color: #10b981;" for="settings-msg-average">2. قالب تشجيع (المعدل السنوي المقبول 10 - 15.99):</label>
+                                    <textarea id="settings-msg-average" class="styled-input w-full" style="min-height: 90px; font-family: inherit; font-size: 0.8rem; line-height: 1.5; direction: rtl;" placeholder="أدخل رسالة التشجيع..."></textarea>
+                                </div>
+                            </div>
+
+                            <div class="form-row mt-4">
+                                <div class="form-group flex-1">
+                                    <label class="font-bold text-xs" style="color: #ef4444;" for="settings-msg-weak">3. قالب تنبيه (المعدل السنوي الضعيف &lt; 10):</label>
+                                    <textarea id="settings-msg-weak" class="styled-input w-full" style="min-height: 90px; font-family: inherit; font-size: 0.8rem; line-height: 1.5; direction: rtl;" placeholder="أدخل رسالة التنبيه..."></textarea>
+                                </div>
+                                <div class="form-group flex-1">
+                                    <label class="font-bold text-xs" style="color: #fbbf24;" for="settings-msg-exempt">4. قالب الإعفاء (التلميذ المعفى من جميع الفصول):</label>
+                                    <textarea id="settings-msg-exempt" class="styled-input w-full" style="min-height: 90px; font-family: inherit; font-size: 0.8rem; line-height: 1.5; direction: rtl;" placeholder="أدخل رسالة الإعفاء..."></textarea>
+                                </div>
+                            </div>
+                            
+                            <div class="buttons-row justify-end mt-4">
+                                <button id="btn-save-settings-templates" class="btn btn-primary" style="background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%); border: none;">
+                                    <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;margin-left:5px;"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
+                                    <span>حفظ قوالب الرسائل</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. System Data & Backups Card -->
+                    <div class="panel settings-panel-premium card-glow-purple mt-4">
+                        <div class="panel-header">
+                            <h2 class="panel-title-premium">
+                                <svg viewBox="0 0 24 24" class="panel-title-icon icon-purple"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+                                <span>إدارة البيانات والنسخ الاحتياطي</span>
+                            </h2>
+                        </div>
+                        <div class="panel-content settings-content-premium">
+                            
+                            <!-- Backup & Restore Item -->
+                            <div class="setting-row-premium">
+                                <div class="setting-info-premium">
+                                    <div class="setting-icon-wrapper bg-blue-soft-glow">
+                                        <svg viewBox="0 0 24 24" class="setting-svg icon-blue"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM19 13l-7 7-7-7h4V9h6v4h4z"/></svg>
+                                    </div>
+                                    <div class="setting-texts">
+                                        <h3 class="setting-title-text">تصدير واستيراد قاعدة البيانات</h3>
+                                        <p class="setting-desc-text">احفظ نسخة احتياطية كاملة من تلاميذك، أقسامك، وعلاماتك في ملف خارجي، أو استعد نسخة سابقة في أي وقت لضمان سلامة بياناتك.</p>
+                                    </div>
+                                </div>
+                                <div class="setting-actions-premium">
+                                    <button id="btn-settings-export" class="btn-premium-action btn-gradient-purple">
+                                        <svg viewBox="0 0 24 24" style="width:16px;height:16px;"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
+                                        <span>تصدير النسخة</span>
+                                    </button>
+                                    <button id="btn-settings-import" class="btn-premium-action btn-gradient-blue">
+                                        <svg viewBox="0 0 24 24" style="width:16px;height:16px;"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
+                                        <span>استيراد النسخة</span>
+                                    </button>
+                                    <input type="file" id="settings-backup-file-input" style="display: none;" accept=".json">
+                                </div>
+                            </div>
+                            
+                            <div class="setting-divider-premium"></div>
+
+                            <!-- Factory Reset Item -->
+                            <div class="setting-row-premium">
+                                <div class="setting-info-premium">
+                                    <div class="setting-icon-wrapper bg-danger-soft-glow">
+                                        <svg viewBox="0 0 24 24" class="setting-svg icon-danger"><path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13H7v-2h10v2z"/></svg>
+                                    </div>
+                                    <div class="setting-texts">
+                                        <h3 class="setting-title-text color-danger">تهيئة النظام وإعادة ضبط المصنع</h3>
+                                        <p class="setting-desc-text">تحذير! سيؤدي هذا الخيار إلى مسح كافة الأقسام، التلاميذ، الغيابات، والنقاط المسجلة نهائيًا وبشكل لا يمكن استرجاعه.</p>
+                                    </div>
+                                </div>
+                                <div class="setting-actions-premium">
+                                    <button id="btn-settings-reset" class="btn-premium-action btn-gradient-rose">
+                                        <svg viewBox="0 0 24 24" style="width:16px;height:16px;"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                                        <span>تهيئة المصنع بالكامل</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+
+            <!-- 6. PEDAGOGICAL VIEW -->
+            <section id="view-pedagogical" class="app-view">
+                <div class="settings-container-premium">
+                    <!-- Sub-tabs navigation bar -->
+                    <div class="pedagogical-tabs-bar" style="display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid var(--border-color); padding-bottom: 10px; flex-wrap: wrap;">
+                        <button type="button" class="ped-tab-btn active" data-ped-tab="cahier-journal" style="padding: 10px 20px; border-radius: 8px; font-weight: 700; border: none; cursor: pointer; display: flex; align-items: center; gap: 8px; font-family: inherit; font-size: 0.85rem; background: var(--color-primary-soft); color: var(--color-primary); transition: all 0.3s;">
+                            <svg viewBox="0 0 24 24" style="width: 16px; height: 16px; fill: currentColor;"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"/></svg>
+                            <span>الوثائق البيداغوجية</span>
+                        </button>
+                        <button type="button" class="ped-tab-btn" data-ped-tab="fiches-pedagogiques" style="padding: 10px 20px; border-radius: 8px; font-weight: 700; border: none; cursor: pointer; display: flex; align-items: center; gap: 8px; font-family: inherit; font-size: 0.85rem; background: transparent; color: var(--text-secondary); transition: all 0.3s;">
+                            <svg viewBox="0 0 24 24" style="width: 16px; height: 16px; fill: currentColor;"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+                            <span>المذكرات التربوية</span>
+                        </button>
+                        <button type="button" class="ped-tab-btn" data-ped-tab="unites-apprentissage" style="padding: 10px 20px; border-radius: 8px; font-weight: 700; border: none; cursor: pointer; display: flex; align-items: center; gap: 8px; font-family: inherit; font-size: 0.85rem; background: transparent; color: var(--text-secondary); transition: all 0.3s;">
+                            <svg viewBox="0 0 24 24" style="width: 16px; height: 16px; fill: currentColor;"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+                            <span>الوحدات التعلمية</span>
+                        </button>
+                        <button type="button" class="ped-tab-btn" data-ped-tab="e-portfolio" style="padding: 10px 20px; border-radius: 8px; font-weight: 700; border: none; cursor: pointer; display: flex; align-items: center; gap: 8px; font-family: inherit; font-size: 0.85rem; background: transparent; color: var(--text-secondary); transition: all 0.3s;">
+                            <svg viewBox="0 0 24 24" style="width: 16px; height: 16px; fill: currentColor;"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+                            <span>محفظة التفتيش الرقمية</span>
+                        </button>
+                        <button type="button" class="ped-tab-btn" data-ped-tab="field-timer" style="padding: 10px 20px; border-radius: 8px; font-weight: 700; border: none; cursor: pointer; display: flex; align-items: center; gap: 8px; font-family: inherit; font-size: 0.85rem; background: transparent; color: var(--text-secondary); transition: all 0.3s;">
+                            <svg viewBox="0 0 24 24" style="width: 16px; height: 16px; fill: currentColor;"><path d="M20.38 8.57l1.42-1.42a1 1 0 0 0-1.42-1.42l-1.42 1.42A8.93 8.93 0 0 0 13 5.07V3h1a1 1 0 0 0 0-2h-4a1 1 0 0 0 0 2h1v2.07A9 9 0 1 0 20.38 8.57zM12 21a7 7 0 1 1 7-7 7 7 0 0 1-7 7z"/></svg>
+                            <span>ميقاتي الميدان الذكي</span>
+                        </button>
+                    </div>
+
+                    <!-- Sub-tabs contents wrapper -->
+                    <div class="pedagogical-content-area">
+                         <!-- Tab 1: Cahier Journal -->
+                         <div class="ped-tab-content active" id="ped-content-cahier-journal">
+                            <div class="panel card-glow-emerald">
+                                <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                                    <h2 class="panel-title">إضافة مذكرة جديدة في الدفتر اليومي للأستاذ</h2>
+                                    <span class="badge-emerald">التحضير البيداغوجي اليومي</span>
+                                </div>
+                                <div class="panel-content">
+                                    <form id="form-add-cahier-entry" class="responsive-form">
+                                        <div class="form-row">
+                                            <div class="form-group flex-1">
+                                                <label for="cahier-date">التاريخ اليومي:</label>
+                                                <input type="date" id="cahier-date" class="styled-input" required>
+                                            </div>
+                                            <div class="form-group flex-1">
+                                                <label for="cahier-class">القسم الدراسي المبرمج:</label>
+                                                <select id="cahier-class" class="styled-select" required>
+                                                    <!-- Loaded dynamically -->
+                                                </select>
+                                            </div>
+                                            <div class="form-group flex-1">
+                                                <label for="cahier-session">الحصة / التوقيت المبرمج:</label>
+                                                <select id="cahier-session" class="styled-select" required>
+                                                    <option value="08:00 - 10:00">08:00 - 10:00</option>
+                                                    <option value="10:00 - 12:00">10:00 - 12:00</option>
+                                                    <option value="13:30 - 15:30">13:30 - 15:30</option>
+                                                    <option value="15:30 - 17:30">15:30 - 17:30</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-row mt-3">
+                                            <div class="form-group flex-1">
+                                                <label for="cahier-sport">النشاط الرياضي المبرمج:</label>
+                                                <select id="cahier-sport" class="styled-select" required>
+                                                    <!-- Dynamically loaded active sports -->
+                                                </select>
+                                            </div>
+                                            <div class="form-group flex-2">
+                                                <label for="cahier-objective">الهدف الإجرائي للحصة (Objectif de séance):</label>
+                                                <input type="text" id="cahier-objective" class="styled-input" placeholder="مثال: التحكم في الكرة ومختلف تقنيات التعامل معها" required>
+                                            </div>
+                                        </div>
+                                        <div class="form-row mt-3">
+                                            <div class="form-group flex-1">
+                                                <label for="cahier-situations">ملخص الوضعيات التعليمية / التعلمية المبرمجة:</label>
+                                                <textarea id="cahier-situations" class="styled-input" style="min-height: 80px;" placeholder="اكتب ملخصاً سريعاً للوضعيات (التهيئة، التعلم، التقييم)..."></textarea>
+                                            </div>
+                                            <div class="form-group flex-1">
+                                                <label for="cahier-evaluation">التقييم الذاتي الفوري للحصة / ملاحظات الأستاذ:</label>
+                                                <textarea id="cahier-evaluation" class="styled-input" style="min-height: 80px;" placeholder="مدى استيعاب التلاميذ للوضعيات، مشاكل التنظيم، الظروف الجوية..."></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="buttons-row justify-end mt-4">
+                                            <button type="submit" class="btn btn-primary" style="display: flex; align-items: center; gap: 6px; font-weight: 700;">
+                                                <svg viewBox="0 0 24 24" style="width: 16px; height: 16px; fill: currentColor;"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                                                <span>حفظ الحصة في الوثائق البيداغوجية</span>
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <div class="panel card-glow-purple mt-4">
+                                <div class="panel-header">
+                                    <h2 class="panel-title">سجل دفتر النصوص اليومي المنجز للأستاذ</h2>
+                                </div>
+                                <div class="panel-content">
+                                    <div class="table-responsive">
+                                        <table class="interactive-table" style="width: 100%;">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 120px; text-align: center;">التاريخ</th>
+                                                    <th style="width: 90px; text-align: center;">القسم</th>
+                                                    <th style="width: 120px; text-align: center;">التوقيت</th>
+                                                    <th style="width: 120px; text-align: center;">النشاط</th>
+                                                    <th style="text-align: right; padding-right: 15px;">الهدف الإجرائي للحصة والوضعيات التعلمية</th>
+                                                    <th style="width: 150px; text-align: center;">الإجراءات</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="cahier-journal-tbody">
+                                                <!-- Dynamic journal rows populated via js -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                         </div>
+
+                         <!-- Tab 2: Fiches Pedagogiques -->
+                         <div class="ped-tab-content" id="ped-content-fiches-pedagogiques" style="display: none;">
+                            <div class="panel card-glow-gold">
+                                <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center;">
+                                    <h2 class="panel-title">منشئ ومكتبة المذكرات البيداغوجية والتربوية للحصص</h2>
+                                    <span class="badge-amber">التحضير البيداغوجي المسبق</span>
+                                </div>
+                                <div class="panel-content">
+                                    <div class="form-row">
+                                        <div class="form-group flex-1">
+                                            <label for="fiche-select-sport">النشاط الرياضي المختار:</label>
+                                            <select id="fiche-select-sport" class="styled-select">
+                                                <!-- Populated dynamically with registered sports -->
+                                            </select>
+                                        </div>
+                                        <div class="form-group flex-1">
+                                            <label for="fiche-select-grade">المستوى الدراسي المستهدف:</label>
+                                            <select id="fiche-select-grade" class="styled-select">
+                                                <option value="1">السنة الأولى ثانوي (1AS)</option>
+                                                <option value="2">السنة الثانية ثانوي (2AS)</option>
+                                                <option value="3">السنة الثالثة ثانوي (3AS)</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group flex-1">
+                                            <label for="fiche-select-session">موضوع وحصة التعلم:</label>
+                                            <input list="fiche-sessions-list" id="fiche-select-session" class="styled-select" placeholder="اختر أو اكتب موضوع الحصة..." value="الحصة الأولى: التحكم والتموضع الفضائي">
+                                            <datalist id="fiche-sessions-list">
+                                                <option value="الحصة الأولى: التحكم والتموضع الفضائي">
+                                                <option value="الحصة الثانية: التمرير والاستلام السريع">
+                                                <option value="الحصة الثالثة: الجري وبناء وضعيات الهجوم">
+                                                <option value="الحصة الرابعة: التنافس والتحكيم وقوانين اللعبة">
+                                                <option value="الحصة الخامسة: التراجع الدفاعي وتغطية المساحات">
+                                                <option value="الحصة السادسة: تسلسل الحركة وسرعة الإنهاء والتسديد">
+                                            </datalist>
+                                        </div>
+                                    </div>
+                                    <div class="buttons-row justify-end mt-4">
+                                        <button type="button" id="btn-generate-fiche" class="btn btn-primary" style="background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%); border: none; display: flex; align-items: center; gap: 6px; font-weight: 700;">
+                                            <svg viewBox="0 0 24 24" style="width: 16px; height: 16px; fill: currentColor;"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                                            <span>توليد ومعاينة المذكرة التربوية</span>
+                                        </button>
+                                    </div>
+
+                                    <!-- Fiche Preview Frame -->
+                                    <div id="fiche-preview-container" class="mt-6" style="display: none; border: 1px dashed var(--border-color); border-radius: 12px; padding: 25px; background: rgba(255, 255, 255, 0.015); box-shadow: inset 0 2px 8px rgba(0,0,0,0.1);">
+                                         <!-- Injected via JS -->
+                                    </div>
+                                </div>
+                            </div>
+                         </div>
+
+                         <!-- Tab 3: Unites Apprentissage -->
+                         <div class="ped-tab-content" id="ped-content-unites-apprentissage" style="display: none;">
+                            <div class="panel card-glow-emerald">
+                                <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center;">
+                                    <h2 class="panel-title">المخطط والتوزيع السنوي وبناء الوحدات التعلمية (السباعية المنهجية)</h2>
+                                    <span class="badge-emerald">التخطيط السنوي للتعلمات</span>
+                                </div>
+                                <div class="panel-content">
+                                    <div class="form-row">
+                                        <div class="form-group flex-1">
+                                            <label for="cycle-select-grade">المستوى الدراسي للمخطط:</label>
+                                            <select id="cycle-select-grade" class="styled-select">
+                                                <option value="1">السنة الأولى ثانوي (1AS)</option>
+                                                <option value="2">السنة الثانية ثانوي (2AS)</option>
+                                                <option value="3">السنة الثالثة ثانوي (3AS)</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group flex-1">
+                                            <label for="cycle-select-term">الفصل الدراسي البيداغوجي:</label>
+                                            <select id="cycle-select-term" class="styled-select">
+                                                <option value="1">الفصل الأول: جري السُرعة + الكرة الطائرة</option>
+                                                <option value="2">الفصل الثاني: القفز الطويل + كرة السلة</option>
+                                                <option value="3">الفصل الثالث: رمي الجُلة (دفع) + كرة اليد</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="buttons-row justify-end mt-4">
+                                        <button type="button" id="btn-print-cycle" class="btn btn-primary" style="display: flex; align-items: center; gap: 6px; font-weight: 700;">
+                                            <svg viewBox="0 0 24 24" style="width: 16px; height: 16px; fill: currentColor;"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/></svg>
+                                            <span>طباعة الوحدة التعلمية المحددة</span>
+                                        </button>
+                                    </div>
+                                    
+                                    <div id="cycle-view-container" class="mt-5">
+                                         <!-- Populated dynamically via JS -->
+                                    </div>
+                                </div>
+                            </div>
+                         </div>
+
+                         <!-- Tab 4: E-Portfolio -->
+                         <div class="ped-tab-content" id="ped-content-e-portfolio" style="display: none;">
+                            <div class="panel card-glow-purple">
+                                <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center;">
+                                    <h2 class="panel-title">المحفظة التربوية الرقمية (ملف زيارة التفتيش والمصادقة الإدارية)</h2>
+                                    <span class="badge-purple">ملف التفتيش التربوي</span>
+                                </div>
+                                <div class="panel-content">
+                                    
+                                    <!-- Overview grid of requirements status -->
+                                    <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px;">
+                                         <div class="stat-card" style="border-bottom: 3.5px solid var(--color-primary); background: rgba(16, 185, 129, 0.02); margin: 0; box-shadow: none;">
+                                             <div class="card-details">
+                                                 <span class="card-label" style="font-size: 0.76rem;">الملف الطبي والرخص</span>
+                                                 <span class="card-value" id="portfolio-medical-status" style="font-size: 1.15rem; color: var(--color-primary); font-weight: 800;">جاهز وموثق</span>
+                                             </div>
+                                         </div>
+                                         <div class="stat-card" style="border-bottom: 3.5px solid var(--color-gold); background: rgba(251, 191, 36, 0.02); margin: 0; box-shadow: none;">
+                                             <div class="card-details">
+                                                 <span class="card-label" style="font-size: 0.76rem;">دفتر تقييم العلامات</span>
+                                                 <span class="card-value" id="portfolio-grades-status" style="font-size: 1.15rem; color: var(--color-gold); font-weight: 800;">مكتمل بنسبة 100%</span>
+                                             </div>
+                                         </div>
+                                         <div class="stat-card" style="border-bottom: 3.5px solid var(--color-blue); background: rgba(59, 130, 246, 0.02); margin: 0; box-shadow: none;">
+                                             <div class="card-details">
+                                                 <span class="card-label" style="font-size: 0.76rem;">مذكرات الحصص المنجزة</span>
+                                                 <span class="card-value" id="portfolio-fiches-status" style="font-size: 1.15rem; color: var(--color-blue); font-weight: 800;">6 مذكرات نموذجية</span>
+                                             </div>
+                                         </div>
+                                         <div class="stat-card" style="border-bottom: 3.5px solid var(--color-purple); background: rgba(139, 92, 246, 0.02); margin: 0; box-shadow: none;">
+                                             <div class="card-details">
+                                                 <span class="card-label" style="font-size: 0.76rem;">سجل التحضير اليومي</span>
+                                                 <span class="card-value" id="portfolio-cahier-status" style="font-size: 1.15rem; color: var(--color-purple); font-weight: 800;">0 حصص مضافة</span>
+                                             </div>
+                                         </div>
+                                    </div>
+
+                                    <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+                                         <div class="panel flex-2" style="margin: 0; background: rgba(255,255,255,0.015); border: 1px solid var(--border-color); box-shadow: none;">
+                                              <div class="panel-header" style="border-bottom: 1px solid var(--border-color); margin-bottom: 15px; padding-bottom: 5px;">
+                                                  <h3 class="panel-title" style="font-size: 0.95rem; color: var(--color-gold);">محتويات المحفظة المرقمنة الجاهزة للطباعة</h3>
+                                              </div>
+                                              <div class="panel-content">
+                                                   <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 15px;">
+                                                        <li style="display: flex; align-items: center; gap: 12px; font-size: 0.82rem;">
+                                                             <svg viewBox="0 0 24 24" style="width: 22px; height: 22px; fill: var(--color-primary);"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                                                             <div>
+                                                                  <strong style="color: #fff;">التوزيع السنوي للكفاءات</strong> - مخطط بناء التعلمات السنوي لمختلف المستويات الثانوية.
+                                                             </div>
+                                                        </li>
+                                                        <li style="display: flex; align-items: center; gap: 12px; font-size: 0.82rem;">
+                                                             <svg viewBox="0 0 24 24" style="width: 22px; height: 22px; fill: var(--color-primary);"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                                                             <div>
+                                                                  <strong style="color: #fff;">كشوف العلامات والغيابات والتقييم</strong> - سجل كامل ومفصل لجميع التلاميذ المسجلين ونتائجهم الفردية والجماعية.
+                                                             </div>
+                                                        </li>
+                                                        <li style="display: flex; align-items: center; gap: 12px; font-size: 0.82rem;">
+                                                             <svg viewBox="0 0 24 24" style="width: 22px; height: 22px; fill: var(--color-primary);"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                                                             <div>
+                                                                  <strong style="color: #fff;">سلالم التقويم الرسمية المعتمدة</strong> - تفاصيل مقاييس التقييم والسرعات والمسافات المقابلة لكل علامة مع سلم مؤشرات الألعاب الجماعية.
+                                                             </div>
+                                                        </li>
+                                                        <li style="display: flex; align-items: center; gap: 12px; font-size: 0.82rem;">
+                                                             <svg viewBox="0 0 24 24" style="width: 22px; height: 22px; fill: var(--color-primary);"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                                                             <div>
+                                                                  <strong style="color: #fff;">سجل التحضير اليومي والغيابات</strong> - الدفتر اليومي الرقمي المدون به التواريخ والأنشطة والتقييمات البيداغوجية الذاتية.
+                                                             </div>
+                                                        </li>
+                                                   </ul>
+                                                   <div class="mt-6">
+                                                        <button type="button" id="btn-print-inspection-file" class="btn btn-primary w-full" style="display: flex; align-items: center; gap: 8px; justify-content: center; font-weight: 700; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border: none;">
+                                                             <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: currentColor;"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/></svg>
+                                                <span>تصدير وطباعة الملف البيداغوجي التربوي بالكامل (PDF)</span>
+                                                        </button>
+                                                   </div>
+                                              </div>
+                                         </div>
+                                         <div class="panel flex-1" style="margin: 0; background: rgba(255,255,255,0.015); border: 1px solid var(--border-color); text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: none;">
+                                              <h3 class="panel-title" style="font-size: 0.95rem; margin-bottom: 15px; color: var(--color-primary);">رمز مسح الزيارة البيداغوجية (QR Link)</h3>
+                                              <div id="portfolio-qrcode-container" style="background: white; padding: 15px; border-radius: 12px; display: inline-block; box-shadow: 0 4px 15px rgba(0,0,0,0.15); margin-bottom: 15px; width: 140px; height: 140px; display: flex; align-items: center; justify-content: center;"></div>
+                                              <p class="text-xs text-muted" style="line-height: 1.4; padding: 0 10px; margin: 0;">يمسح السيد المفتش التربوي هذا الرمز للولوج إلى قاعدة البيانات الرقمية للأستاذ ومراجعة الغيابات وتصدير النقاط في ثوانٍ معدودة.</p>
+                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                         </div>
+
+                         <!-- Tab 5: Field Timer -->
+                         <div class="ped-tab-content" id="ped-content-field-timer" style="display: none;">
+                            <div class="panel card-glow-emerald">
+                                <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center;">
+                                    <h2 class="panel-title">ميقاتي الميدان التفاعلي وإشعارات تسيير الحصة بيداغوجياً</h2>
+                                    <span class="badge-emerald">الميقاتي الرقمي</span>
+                                </div>
+                                <div class="panel-content" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 25px 10px;">
+                                     
+                                     <!-- Timer Selection Buttons -->
+                                     <div style="display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; justify-content: center;">
+                                          <button type="button" class="btn-timer-select active" data-timer-mins="15" data-timer-label="المرحلة التحضيرية (الإحماء والتهيئة البدنية)" style="padding: 10px 18px; border-radius: 30px; border: 1.5px solid var(--color-primary); background: var(--color-primary-soft); color: var(--color-primary); cursor: pointer; font-weight: 700; font-family: inherit; font-size: 0.8rem; transition: all 0.3s;">الإحماء (15 دقيقة)</button>
+                                          <button type="button" class="btn-timer-select" data-timer-mins="30" data-timer-label="المرحلة الرئيسية (التعلم والوضعيات البيداغوجية)" style="padding: 10px 18px; border-radius: 30px; border: 1.5px solid var(--border-color); background: transparent; color: var(--text-secondary); cursor: pointer; font-weight: 700; font-family: inherit; font-size: 0.8rem; transition: all 0.3s;">الجزء الرئيسي (30 دقيقة)</button>
+                                          <button type="button" class="btn-timer-select" data-timer-mins="15" data-timer-label="المرحلة الختامية (التقييم الفوري والاسترخاء)" style="padding: 10px 18px; border-radius: 30px; border: 1.5px solid var(--border-color); background: transparent; color: var(--text-secondary); cursor: pointer; font-weight: 700; font-family: inherit; font-size: 0.8rem; transition: all 0.3s;">الجزء الختامي (15 دقيقة)</button>
+                                     </div>
+
+                                     <!-- Timer Custom Settings -->
+                                     <div class="timer-settings-row" style="display: flex; gap: 15px; margin-bottom: 25px; flex-wrap: wrap; justify-content: center; align-items: center; background: rgba(255, 255, 255, 0.02); padding: 15px; border-radius: 12px; border: 1px solid var(--border-color); width: 100%; max-width: 600px; direction: rtl;">
+                                          <div class="form-group" style="flex: 1; min-width: 120px; margin: 0;">
+                                              <label for="timer-custom-mins" style="font-size: 0.72rem; font-weight: 700; display: block; margin-bottom: 5px; color: var(--text-secondary);">التحكم بالوقت (دقائق):</label>
+                                              <input type="number" id="timer-custom-mins" class="styled-input" style="padding: 6px 10px; font-size: 0.85rem;" min="1" max="180" value="15">
+                                          </div>
+                                          <div class="form-group" style="flex: 1; min-width: 160px; margin: 0;">
+                                              <label for="timer-sound-type" style="font-size: 0.72rem; font-weight: 700; display: block; margin-bottom: 5px; color: var(--text-secondary);">نوع جرس التنبيه:</label>
+                                              <select id="timer-sound-type" class="styled-select" style="padding: 6px 10px; font-size: 0.85rem; height: 34px;">
+                                                  <option value="whistle">صافرة الأستاذ النموذجية</option>
+                                                  <option value="double-whistle">صافرة تحكيم مزدوجة</option>
+                                                  <option value="buzzer">منبه إلكتروني رقمي</option>
+                                                  <option value="beep">رنين صافي قصير</option>
+                                              </select>
+                                          </div>
+                                          <div class="form-group" style="flex: 1; min-width: 150px; margin: 0;">
+                                              <label for="timer-alert-duration" style="font-size: 0.72rem; font-weight: 700; display: block; margin-bottom: 5px; color: var(--text-secondary);">مدة التنبيه: <span id="alert-duration-val" style="font-family: 'Outfit'; font-weight: 700; color: var(--color-primary);">2</span> ثانية</label>
+                                              <input type="range" id="timer-alert-duration" min="1" max="10" value="2" style="width: 100%; accent-color: var(--color-primary);">
+                                          </div>
+                                     </div>
+
+                                     <!-- Visual Circular Timer Display -->
+                                     <div class="timer-display-circle" style="width: 220px; height: 220px; border-radius: 50%; border: 8px solid var(--color-primary); display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 30px; box-shadow: 0 0 20px var(--color-primary-soft); position: relative; background: rgba(0, 0, 0, 0.25);">
+                                          <div id="field-timer-label" style="font-size: 0.72rem; color: var(--text-secondary); margin-bottom: 8px; font-weight: 700; text-align: center; max-width: 80%; line-height: 1.35;">المرحلة التحضيرية (الإحماء والتهيئة البدنية)</div>
+                                          <div id="field-timer-time" style="font-size: 3.5rem; font-weight: 800; font-family: 'Outfit', sans-serif; color: #fff; line-height: 1;">15:00</div>
+                                          
+                                          <svg style="position: absolute; top: -8px; left: -8px; width: 220px; height: 220px; transform: rotate(-90deg); pointer-events: none;">
+                                               <circle cx="110" cy="110" r="102" stroke="rgba(255,255,255,0.03)" stroke-width="8" fill="transparent"/>
+                                               <circle id="timer-progress-ring" cx="110" cy="110" r="102" stroke="var(--color-primary)" stroke-width="8" fill="transparent" stroke-dasharray="640" stroke-dashoffset="0" style="transition: stroke-dashoffset 0.1s linear; stroke-linecap: round;"/>
+                                          </svg>
+                                     </div>
+
+                                     <!-- Control Buttons -->
+                                     <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap; justify-content: center;">
+                                          <button type="button" id="btn-timer-reset" class="btn btn-secondary" style="padding: 10px 20px; border-radius: 8px; display: flex; align-items: center; gap: 6px; font-weight: 700; height: 42px;">
+                                               <svg viewBox="0 0 24 24" style="width: 16px; height: 16px; fill: currentColor;"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+                                               <span>إعادة تعيين</span>
+                                          </button>
+                                          <button type="button" id="btn-timer-toggle" class="btn btn-primary" style="padding: 12px 32px; border-radius: 8px; font-size: 1rem; display: flex; align-items: center; gap: 8px; font-weight: 800; background: var(--color-primary); color: white; border: none; height: 44px; cursor: pointer;">
+                                               <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: currentColor;" id="timer-play-svg"><path d="M8 5v14l11-7z"/></svg>
+                                               <span id="timer-toggle-text">تشغيل المؤقت</span>
+                                          </button>
+                                          <button type="button" id="btn-timer-whistle" class="btn btn-accent" style="padding: 10px 20px; border-radius: 8px; display: flex; align-items: center; gap: 6px; font-weight: 700; height: 42px;">
+                                               <svg viewBox="0 0 24 24" style="width: 16px; height: 16px; fill: currentColor;"><path d="M18.5 3H16v2h2.5c.83 0 1.5.67 1.5 1.5V9h-2c-1.1 0-2 .9-2 2v2c0 1.1.9 2 2 2h2v4.5c0 .83-.67 1.5-1.5 1.5H11V11c0-1.1-.9-2-2-2H4v2h3v11c0 1.1.9 2 2 2h8c2.21 0 4-1.79 4-4v-6.5c0-1.1-.9-2-2-2H21V4.5c0-1.66-1.34-3-3-3zM7 13H5v-2h2v2z"/></svg>
+                                               <span>صافرة صوتية</span>
+                                          </button>
+                                     </div>
+
+                                </div>
+                            </div>
+                         </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        
+        <!-- Footer info bar -->
+        <footer class="main-footer">
+            <span class="text-muted" style="font-size: 0.75rem;">Smart Sport v2.0 - التربية البدنية والرياضية للتعليم الثانوي</span>
+        </footer>
+    </main>
+
+    <!-- ==================== MODALS & POPUPS ==================== -->
+
+    <!-- 1. Add/Edit Class Modal -->
+    <div id="modal-add-class" class="modal">
+        <div class="modal-content card-glow-emerald">
+            <div class="modal-header">
+                <h3 class="modal-title" data-i18n="modal-class-title">إضافة قسم تربوي جديد</h3>
+                <span class="modal-close" id="modal-close-class">&times;</span>
+            </div>
+            <form id="form-add-class" class="responsive-form mt-4">
+                <div class="form-group">
+                    <label for="class-name-input" data-i18n="lbl-class-name">اسم القسم (مثل: 1 ج م ع ت 1 أو 3 ع ت 2):</label>
+                    <input type="text" id="class-name-input" class="styled-input" required placeholder="1 ج م ع ت 1">
+                </div>
+                <div class="form-group">
+                    <label for="class-grade-input" data-i18n="lbl-class-grade">المستوى الدراسي للقسم:</label>
+                    <select id="class-grade-input" class="styled-select">
+                        <option value="1">السنة الأولى ثانوي (1AS)</option>
+                        <option value="2">السنة الثانية ثانوي (2AS)</option>
+                        <option value="3">السنة الثالثة ثانوي (3AS)</option>
+                    </select>
+                </div>
+                <div class="buttons-row justify-end mt-6">
+                    <button type="button" class="btn btn-secondary" id="btn-cancel-class" data-i18n="btn-cancel">إلغاء</button>
+                    <button type="submit" class="btn btn-primary" data-i18n="btn-confirm">تأكيد الحفظ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 2. Add/Edit Student Modal (With Per-Term Exemption checkboxes & phone) -->
+    <div id="modal-add-student" class="modal">
+        <div class="modal-content card-glow-emerald" style="max-width: 550px;">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-student-title-text" data-i18n="modal-student-title">إضافة تلميذ جديد</h3>
+                <span class="modal-close" id="modal-close-student">&times;</span>
+            </div>
+            <form id="form-add-student" class="responsive-form mt-4">
+                <input type="hidden" id="student-id-edit-flag" value="">
+                <div class="form-row">
+                    <div class="form-group flex-1">
+                        <label for="student-lastname-input" data-i18n="lbl-student-lastname">اللقب:</label>
+                        <input type="text" id="student-lastname-input" class="styled-input" required placeholder="مثال: بن علي">
+                    </div>
+                    <div class="form-group flex-1">
+                        <label for="student-firstname-input" data-i18n="lbl-student-firstname">الاسم:</label>
+                        <input type="text" id="student-firstname-input" class="styled-input" required placeholder="مثال: أحمد">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group flex-1">
+                        <label for="student-gender-input" data-i18n="lbl-student-gender">الجنس:</label>
+                        <select id="student-gender-input" class="styled-select">
+                            <option value="M" data-i18n="gender-m">ذكر (M)</option>
+                            <option value="F" data-i18n="gender-f">أنثى (F)</option>
+                        </select>
+                    </div>
+                    <div class="form-group flex-1">
+                        <label for="student-birth-input" data-i18n="lbl-student-birth">تاريخ الميلاد:</label>
+                        <input type="date" id="student-birth-input" class="styled-input" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="student-phone-input" data-i18n="lbl-student-phone">رقم هاتف الولي (لإرسال SMS/واتساب):</label>
+                    <input type="text" id="student-phone-input" class="styled-input" placeholder="06XXXXXXXX أو 07XXXXXXXX">
+                </div>
+                <div class="form-group">
+                    <label data-i18n="lbl-exemptions">إعفاء التلميذ من التقييم خلال الفصول:</label>
+                    <div style="display:flex; gap: 20px; margin-top: 5px;">
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="student-ex-1">
+                            <span data-i18n="term-1">الفصل الأول</span>
+                        </label>
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="student-ex-2">
+                            <span data-i18n="term-2">الفصل الثاني</span>
+                        </label>
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="student-ex-3">
+                            <span data-i18n="term-3">الفصل الثالث</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="buttons-row justify-end mt-6">
+                    <button type="button" class="btn btn-secondary" id="btn-cancel-student" data-i18n="btn-cancel">إلغاء</button>
+                    <button type="submit" class="btn btn-primary" data-i18n="btn-confirm">تأكيد الحفظ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 3. Import Excel XLSX Modal -->
+    <div id="modal-import-csv" class="modal">
+        <div class="modal-content card-glow-emerald">
+            <div class="modal-header">
+                <h3 class="modal-title" data-i18n="modal-import-title">استيراد التلاميذ عبر ملف إكسل XLSX</h3>
+                <span class="modal-close" id="modal-close-import">&times;</span>
+            </div>
+            <div class="modal-body mt-4">
+                <p class="text-small" data-i18n="import-csv-instruction">
+                    يمكنك استيراد قائمة التلاميذ دفعة واحدة للقسم النشط عن طريق سحب وإفلات ملف إكسل (XLSX أو XLS) مهيأ أو اختياره من جهازك.
+                </p>
+                <div class="template-instructions mt-4">
+                    <h4 class="text-small font-bold" data-i18n="csv-template-title">الأعمدة المطلوبة في ملف الإكسل (الورقة الأولى):</h4>
+                    <pre class="csv-template-box" style="direction: rtl; text-align: right;">العمود 1: اللقب (أو الاسم العائلي)
+العمود 2: الاسم (أو الاسم الشخصي)
+العمود 3: الجنس (ذكر/أنثى أو M/F)
+العمود 4: تاريخ الازدياد (تاريخ الميلاد، مثال: 2007-05-13 أو 13/05/2007)</pre>
+                    <p class="text-xs text-muted" data-i18n="csv-template-note">* ملاحظة: يمكنك ترتيب الأعمدة بأي شكل كان، وسيقوم النظام بالتعرف على العناوين تلقائياً إذا كانت تحتوي على الكلمات الدلالية (اللقب، الاسم، الجنس، تاريخ).</p>
+                </div>
+                
+                <div class="file-upload-drag-area mt-4" id="csv-drag-area">
+                    <svg viewBox="0 0 24 24" class="upload-icon"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
+                    <p class="drag-text" data-i18n="drag-n-drop">اسحب ملف الإكسل (xlsx, xls) وأفلته هنا أو اضغط للتصفح</p>
+                    <input type="file" id="csv-file-input" style="display: none;" accept=".xlsx, .xls">
+                </div>
+                
+                <div class="buttons-row justify-end mt-6">
+                    <button type="button" class="btn btn-secondary" id="btn-close-import" data-i18n="btn-close">إغلاق</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Sports Activities Config Modal -->
+    <div id="modal-activities-config" class="modal">
+        <div class="modal-content card-glow-emerald" style="max-width: 550px; max-height: 90vh; overflow-y: auto;">
+            <div class="modal-header">
+                <h3 class="modal-title" data-i18n="modal-config-activities-title">إعداد الأنشطة الرياضية للفصول</h3>
+                <span class="modal-close" id="modal-close-activities">&times;</span>
+            </div>
+            <form id="form-activities-config" class="responsive-form mt-4">
+                <!-- Term 1 -->
+                <div class="term-activity-group">
+                    <h4 class="term-title-hdr" data-i18n="term-1">الفصل الأول</h4>
+                    <div class="form-row">
+                        <div class="form-group flex-1">
+                            <label for="act-ind-1" data-i18n="lbl-ind-sport">النشاط الفردي:</label>
+                            <select id="act-ind-1" class="styled-select w-full">
+                                <option value="speed-run" data-i18n="sport-speed-run">سرعة (60م)</option>
+                                <option value="endurance-run" data-i18n="sport-endurance">مداومة (800م / 600م)</option>
+                                <option value="long-jump" data-i18n="sport-long-jump">الوثب الطويل</option>
+                                <option value="shot-put" data-i18n="sport-shot-put">رمي الجلة</option>
+                                <option value="triple-jump" data-i18n="sport-triple-jump">الوثب الثلاثي</option>
+                            </select>
+                        </div>
+                        <div class="form-group flex-1">
+                            <label for="act-col-1" data-i18n="lbl-col-sport">النشاط الجماعي:</label>
+                            <select id="act-col-1" class="styled-select w-full">
+                                <option value="volleyball" data-i18n="sport-volleyball">كرة الطائرة</option>
+                                <option value="handball" data-i18n="sport-handball">كرة اليد</option>
+                                <option value="basketball" data-i18n="sport-basketball">كرة السلة</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <!-- Term 2 -->
+                <div class="term-activity-group mt-4">
+                    <h4 class="term-title-hdr" data-i18n="term-2">الفصل الثاني</h4>
+                    <div class="form-row">
+                        <div class="form-group flex-1">
+                            <label for="act-ind-2" data-i18n="lbl-ind-sport">النشاط الفردي:</label>
+                            <select id="act-ind-2" class="styled-select w-full">
+                                <option value="speed-run" data-i18n="sport-speed-run">سرعة (60م)</option>
+                                <option value="endurance-run" data-i18n="sport-endurance" selected>مداومة (800م / 600م)</option>
+                                <option value="long-jump" data-i18n="sport-long-jump">الوثب الطويل</option>
+                                <option value="shot-put" data-i18n="sport-shot-put">رمي الجلة</option>
+                                <option value="triple-jump" data-i18n="sport-triple-jump">الوثب الثلاثي</option>
+                            </select>
+                        </div>
+                        <div class="form-group flex-1">
+                            <label for="act-col-2" data-i18n="lbl-col-sport">النشاط الجماعي:</label>
+                            <select id="act-col-2" class="styled-select w-full">
+                                <option value="volleyball" data-i18n="sport-volleyball">كرة الطائرة</option>
+                                <option value="handball" data-i18n="sport-handball" selected>كرة اليد</option>
+                                <option value="basketball" data-i18n="sport-basketball">كرة السلة</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <!-- Term 3 -->
+                <div class="term-activity-group mt-4">
+                    <h4 class="term-title-hdr" data-i18n="term-3">الفصل الثالث</h4>
+                    <div class="form-row">
+                        <div class="form-group flex-1">
+                            <label for="act-ind-3" data-i18n="lbl-ind-sport">النشاط الفردي:</label>
+                            <select id="act-ind-3" class="styled-select w-full">
+                                <option value="speed-run" data-i18n="sport-speed-run">سرعة (60م)</option>
+                                <option value="endurance-run" data-i18n="sport-endurance">مداومة (800م / 600م)</option>
+                                <option value="long-jump" data-i18n="sport-long-jump" selected>الوثب الطويل</option>
+                                <option value="shot-put" data-i18n="sport-shot-put">رمي الجلة</option>
+                                <option value="triple-jump" data-i18n="sport-triple-jump">الوثب الثلاثي</option>
+                            </select>
+                        </div>
+                        <div class="form-group flex-1">
+                            <label for="act-col-3" data-i18n="lbl-col-sport">النشاط الجماعي:</label>
+                            <select id="act-col-3" class="styled-select w-full">
+                                <option value="volleyball" data-i18n="sport-volleyball">كرة الطائرة</option>
+                                <option value="handball" data-i18n="sport-handball">كرة اليد</option>
+                                <option value="basketball" data-i18n="sport-basketball" selected>كرة السلة</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add New Sport Section -->
+                <div class="term-activity-group mt-4" style="border-color: rgba(16, 185, 129, 0.2);">
+                    <h4 class="term-title-hdr" style="color: var(--color-primary); border-color: rgba(16, 185, 129, 0.2);">+ إضافة نشاط رياضي جديد</h4>
+                    
+                    <div class="form-row">
+                        <div class="form-group flex-1">
+                            <label for="new-sport-type">نوع النشاط:</label>
+                            <select id="new-sport-type" class="styled-select w-full" onchange="app.toggleNewSportFields(this.value)">
+                                <option value="individual">نشاط فردي (ألعاب قوى)</option>
+                                <option value="collective">نشاط جماعي (كرة...)</option>
+                            </select>
+                        </div>
+                        <div class="form-group flex-1">
+                            <label for="new-sport-name">اسم النشاط الرياضي الجديد:</label>
+                            <input type="text" id="new-sport-name" class="styled-input w-full" placeholder="مثال: رمي الرمح">
+                        </div>
+                    </div>
+
+                    <div id="new-individual-sport-fields" class="mt-2">
+                        <div class="form-row">
+                            <div class="form-group flex-1">
+                                <label for="new-sport-unit">وحدة القياس:</label>
+                                <select id="new-sport-unit" class="styled-select w-full">
+                                    <option value="m">متر (m)</option>
+                                    <option value="sec">ثانية (sec)</option>
+                                </select>
+                            </div>
+                            <div class="form-group flex-1">
+                                <label for="new-sport-direction">اتجاه التقييم:</label>
+                                <select id="new-sport-direction" class="styled-select w-full">
+                                    <option value="higher">الأكبر أفضل (مثال: الوثب، الجلة)</option>
+                                    <option value="lower">الأقل أفضل (مثال: الجري، السرعة)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row mt-2">
+                            <div class="form-group flex-1" style="border: 1px solid rgba(59, 130, 246, 0.2); padding: 8px; border-radius: 4px; background: rgba(59, 130, 246, 0.02);">
+                                <span class="font-bold text-xs color-blue" style="color: #3b82f6;">الذكور (M)</span>
+                                <label style="font-size:0.75rem;" for="new-scale-m-best">20/20 (أداء ممتاز):</label>
+                                <input type="number" step="0.01" id="new-scale-m-best" class="styled-input w-full" placeholder="مثال: 5.5">
+                                <label style="font-size:0.75rem;" for="new-scale-m-worst">05/20 (أداء ضعيف):</label>
+                                <input type="number" step="0.01" id="new-scale-m-worst" class="styled-input w-full" placeholder="مثال: 3.2">
+                            </div>
+                            <div class="form-group flex-1" style="border: 1px solid rgba(236, 72, 153, 0.2); padding: 8px; border-radius: 4px; background: rgba(236, 72, 153, 0.02);">
+                                <span class="font-bold text-xs color-pink" style="color: #ec4899;">الإناث (F)</span>
+                                <label style="font-size:0.75rem;" for="new-scale-f-best">20/20 (أداء ممتاز):</label>
+                                <input type="number" step="0.01" id="new-scale-f-best" class="styled-input w-full" placeholder="مثال: 4.2">
+                                <label style="font-size:0.75rem;" for="new-scale-f-worst">05/20 (أداء ضعيف):</label>
+                                <input type="number" step="0.01" id="new-scale-f-worst" class="styled-input w-full" placeholder="مثال: 2.0">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="button" id="btn-add-new-sport" class="btn btn-primary w-full mt-4" style="background: linear-gradient(135deg, var(--color-primary) 0%, #10B981 100%);">
+                        <span>إضافة النشاط لقاعدة البيانات</span>
+                    </button>
+                </div>
+
+                <div class="buttons-row justify-end mt-6">
+                    <button type="button" class="btn btn-secondary" id="btn-cancel-activities" data-i18n="btn-close">إغلاق</button>
+                    <button type="submit" class="btn btn-primary" data-i18n="btn-confirm">حفظ الإعدادات</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 5. User Guide Manual Modal -->
+    <div id="modal-user-manual" class="modal">
+        <div class="modal-content card-glow-gold" style="max-width: 600px; max-height: 80vh; overflow-y: auto;">
+            <div class="modal-header">
+                <h3 class="modal-title" data-i18n="manual-title">دليل استخدام تطبيق Smart Sport</h3>
+                <span class="modal-close" id="modal-close-manual">&times;</span>
+            </div>
+            <div class="modal-body mt-4 text-content" style="line-height: 1.8;">
+                <h4 class="font-bold">1. إدخال بيانات الأقسام والتلاميذ</h4>
+                <p>قم بإنشاء قسم دراسي جديد، ثم أضف التلاميذ يدويًا أو عبر استيراد ملف إكسل CSV. يجب أن يحتوي ملف CSV على ثلاثة أعمدة مرتبة كالتالي: (الاسم،اللقب،الجنس) لتتم القراءة بنجاح.</p>
+                <h4 class="font-bold mt-2">2. تنظيم التقييم والفصول</h4>
+                <p>يتكون العام الدراسي من ثلاثة فصول. كل فصل يتكون من ثلاث محطات للتقييم: المراقبة المستمرة، الفرض، والاختبار. ويقوم التطبيق بحساب المعدلات تلقائيًا.</p>
+                <h4 class="font-bold mt-2">3. المراقبة المستمرة (20 نقطة)</h4>
+                <p>تُحسب من 7 حصص حضور وعمل (كل حصة بنقطتين، الحاضر = 2، المريض M = 1، الغائب A = 0)، بالإضافة إلى نقاط الانضباط (2)، المشاركة (2)، والإبداع (2).</p>
+                <h4 class="font-bold mt-2">4. الفرض والاختبار وألعاب القوى</h4>
+                <p>بالنسبة للرياضة الفردية، يتاح إدخال 3 محاولات لكل تلميذ، ويقوم النظام باحتساب المحاولة الأفضل تلقائيًا وتحويلها لنقطة من 20 بناءً على سلم التنقيط المعتمد. الفرض والاختبار هما متوسط علامة الرياضة الفردية والرياضة الجماعية.</p>
+                <h4 class="font-bold mt-2">5. المراسلة وولي الأمر</h4>
+                <p>يمكنك الضغط على أيقونة الواتساب أو الرسائل القصيرة SMS بجانب اسم أي تلميذ لتوليد رسالة نصية جاهزة تحتوي على تفاصيل نتائجه ومعدلاته لإرسالها مباشرة لولي أمره.</p>
+                
+                <div class="buttons-row justify-end mt-6">
+                    <button type="button" class="btn btn-secondary" id="btn-close-manual-bottom">إغلاق الدليل</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 6. Scale Benchmarks Manager Modal -->
+    <div id="modal-scale-manager" class="modal">
+        <div class="modal-content card-glow-emerald" style="max-width: 700px; max-height: 90vh; overflow-y: auto; padding: 0; overflow: hidden; display: flex; flex-direction: column;">
+            
+            <!-- Premium Header -->
+            <div class="modal-header-premium" style="padding: 20px 24px; display: flex; align-items: center; justify-content: space-between; position: relative;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div class="modal-icon-glow" style="width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; border-radius: 10px;">
+                        <svg viewBox="0 0 24 24" style="width: 22px; height: 22px; fill: #10b981;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                    </div>
+                    <div>
+                        <h3 class="modal-title" data-i18n="scale-manager-title" style="margin: 0; font-size: 1.15rem; font-weight: 800; color: #fff;">تحميل وتعديل سلالم التنقيط</h3>
+                        <p style="margin: 3px 0 0 0; font-size: 0.75rem; color: rgba(255,255,255,0.7);">اضبط مستويات أداء الأنشطة الفردية والجماعية</p>
+                    </div>
+                </div>
+                <span class="modal-close" id="modal-close-scales" style="color: #fff; font-size: 1.6rem; opacity: 0.8; transition: opacity 0.2s; cursor: pointer;">&times;</span>
+            </div>
+
+            <!-- Tab Navigation inside Scale Manager Modal -->
+            <div class="scale-modal-tabs" style="display: flex; background: rgba(255,255,255,0.02); border-bottom: 1px solid var(--border-color); padding: 0 24px;">
+                <button type="button" class="scale-tab-btn active" id="scale-tab-btn-individual" style="background: none; border: none; border-bottom: 3px solid var(--color-primary); color: #fff; padding: 12px 20px; font-weight: 700; cursor: pointer; font-size: 0.85rem; font-family: inherit;">سلم الأنشطة الفردية</button>
+                <button type="button" class="scale-tab-btn" id="scale-tab-btn-collective" style="background: none; border: none; border-bottom: 3px solid transparent; color: var(--text-secondary); padding: 12px 20px; font-weight: 700; cursor: pointer; font-size: 0.85rem; font-family: inherit;">سلم الألعاب الجماعية</button>
+            </div>
+
+            <div class="modal-body" style="padding: 24px; overflow-y: auto; flex: 1;">
+                
+                <!-- Individual Scale Content (Active by default) -->
+                <div id="scale-tab-content-individual">
+                    <!-- Sport Selection Area -->
+                    <div class="sport-select-card-premium" style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; display: flex; align-items: center; gap: 16px; margin-bottom: 20px;">
+                        <div style="background: rgba(16, 185, 129, 0.1); width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                            <svg viewBox="0 0 24 24" style="width: 20px; height: 20px; fill: var(--color-primary);"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                        </div>
+                        <div style="flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                            <div>
+                                <label for="scale-select-sport" data-i18n="lbl-select-sport" style="display: block; font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 6px; font-weight: 600;">اختر النشاط الرياضي الفردي:</label>
+                                <select id="scale-select-sport" class="styled-select w-full" style="padding: 10px 14px; font-weight: 600; font-size: 0.9rem; border-color: rgba(16, 185, 129, 0.3); background-color: var(--bg-main);">
+                                    <option value="speed-run" data-i18n="sport-speed-run">سرعة (60م)</option>
+                                    <option value="endurance-run" data-i18n="sport-endurance">مداومة (800م / 600م)</option>
+                                    <option value="long-jump" data-i18n="sport-long-jump">الوثب الطويل</option>
+                                    <option value="shot-put" data-i18n="sport-shot-put">رمي الجلة</option>
+                                    <option value="triple-jump" data-i18n="sport-triple-jump">الوثب الثلاثي</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="scale-select-grade" style="display: block; font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 6px; font-weight: 600;">المستوى الدراسي:</label>
+                                <select id="scale-select-grade" class="styled-select w-full" style="padding: 10px 14px; font-weight: 600; font-size: 0.9rem; border-color: rgba(16, 185, 129, 0.3); background-color: var(--bg-main);">
+                                    <option value="1">السنة الأولى ثانوي (1AS)</option>
+                                    <option value="2">السنة الثانية ثانوي (2AS)</option>
+                                    <option value="3">السنة الثالثة ثانوي (3AS)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cards Grid -->
+                    <div class="scale-edit-sections-premium">
+                        
+                        <!-- Male Column -->
+                        <div class="scale-card-premium card-male-premium" style="border: 1px solid rgba(59, 130, 246, 0.15); background: linear-gradient(135deg, rgba(59, 130, 246, 0.03) 0%, rgba(10, 13, 22, 0.9) 100%); padding: 20px; border-radius: 14px; position: relative; overflow: hidden; box-shadow: 0 4px 20px rgba(59, 130, 246, 0.05);">
+                            <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, #3b82f6, transparent);"></div>
+                            
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
+                                <div style="width: 32px; height: 32px; border-radius: 8px; background: rgba(59, 130, 246, 0.1); display: flex; align-items: center; justify-content: center;">
+                                    <svg viewBox="0 0 24 24" style="width: 16px; height: 16px; fill: #3b82f6;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
+                                </div>
+                                <h4 class="font-bold color-blue" data-i18n="gender-m" style="margin: 0; font-size: 0.95rem; color: #3b82f6;">الذكور (M)</h4>
+                            </div>
+
+                            <!-- Male Best Performance -->
+                            <div class="form-group-premium" style="margin-bottom: 14px;">
+                                <label for="scale-m-best" id="lbl-scale-m-best" style="display: block; font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 6px;">الحد الأقصى للأداء (يمنح 20/20):</label>
+                                <div class="input-with-icon-wrapper" style="position: relative; display: flex; align-items: center;">
+                                    <input type="number" step="0.01" id="scale-m-best" class="styled-input w-full" style="padding-left: 36px; padding-right: 12px; font-weight: 700; border-color: rgba(59, 130, 246, 0.25);">
+                                    <div style="position: absolute; left: 10px; display: flex; align-items: center; pointer-events: none;">
+                                        <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: #10b981;"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Male Worst Performance -->
+                            <div class="form-group-premium">
+                                <label for="scale-m-worst" id="lbl-scale-m-worst" style="display: block; font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 6px;">الحد الأدنى للأداء (يمنح 05/20):</label>
+                                <div class="input-with-icon-wrapper" style="position: relative; display: flex; align-items: center;">
+                                    <input type="number" step="0.01" id="scale-m-worst" class="styled-input w-full" style="padding-left: 36px; padding-right: 12px; font-weight: 700; border-color: rgba(59, 130, 246, 0.25);">
+                                    <div style="position: absolute; left: 10px; display: flex; align-items: center; pointer-events: none;">
+                                        <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: #ef4444;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Female Column -->
+                        <div class="scale-card-premium card-female-premium" style="border: 1px solid rgba(236, 72, 153, 0.15); background: linear-gradient(135deg, rgba(236, 72, 153, 0.03) 0%, rgba(10, 13, 22, 0.9) 100%); padding: 20px; border-radius: 14px; position: relative; overflow: hidden; box-shadow: 0 4px 20px rgba(236, 72, 153, 0.05);">
+                            <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, #ec4899, transparent);"></div>
+                            
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
+                                <div style="width: 32px; height: 32px; border-radius: 8px; background: rgba(236, 72, 153, 0.1); display: flex; align-items: center; justify-content: center;">
+                                    <svg viewBox="0 0 24 24" style="width: 16px; height: 16px; fill: #ec4899;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 12.03V19h2v-4.97h2v-2h-6v2h2z"/></svg>
+                                </div>
+                                <h4 class="font-bold color-pink" data-i18n="gender-f" style="margin: 0; font-size: 0.95rem; color: #ec4899;">الإناث (F)</h4>
+                            </div>
+
+                            <!-- Female Best Performance -->
+                            <div class="form-group-premium" style="margin-bottom: 14px;">
+                                <label for="scale-f-best" id="lbl-scale-f-best" style="display: block; font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 6px;">الحد الأقصى للأداء (يمنح 20/20):</label>
+                                <div class="input-with-icon-wrapper" style="position: relative; display: flex; align-items: center;">
+                                    <input type="number" step="0.01" id="scale-f-best" class="styled-input w-full" style="padding-left: 36px; padding-right: 12px; font-weight: 700; border-color: rgba(236, 72, 153, 0.25);">
+                                    <div style="position: absolute; left: 10px; display: flex; align-items: center; pointer-events: none;">
+                                        <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: #10b981;"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Female Worst Performance -->
+                            <div class="form-group-premium">
+                                <label for="scale-f-worst" id="lbl-scale-f-worst" style="display: block; font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 6px;">الحد الأدنى للأداء (يمنح 05/20):</label>
+                                <div class="input-with-icon-wrapper" style="position: relative; display: flex; align-items: center;">
+                                    <input type="number" step="0.01" id="scale-f-worst" class="styled-input w-full" style="padding-left: 36px; padding-right: 12px; font-weight: 700; border-color: rgba(236, 72, 153, 0.25);">
+                                    <div style="position: absolute; left: 10px; display: flex; align-items: center; pointer-events: none;">
+                                        <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: #ef4444;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Explanation Alert Box -->
+                    <div class="scale-explanation-box-premium" style="background: rgba(16, 185, 129, 0.04); border: 1px solid rgba(16, 185, 129, 0.15); border-radius: 10px; padding: 14px; display: flex; align-items: flex-start; gap: 10px; margin-top: 20px;">
+                        <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: var(--color-primary); flex-shrink: 0; margin-top: 2px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                        <p style="margin: 0; font-size: 0.78rem; color: var(--text-secondary); line-height: 1.6;">
+                            <strong>آلية التنقيط التلقائي:</strong> يقوم التطبيق بحساب علامة التلميذ بشكل نسبي مستقيم (Linear Interpolation) بين الحد الأدنى (الذي يمنح 5 نقاط) والحد الأقصى (الذي يمنح 20 نقطة) للمستوى الدراسي المحدد.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Collective Scale Content (Hidden by default) -->
+                <div id="scale-tab-content-collective" style="display: none;">
+                    <div style="background: rgba(251, 191, 36, 0.03); border: 1px solid rgba(251, 191, 36, 0.2); border-radius: 12px; padding: 16px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                        <div style="background: rgba(251, 191, 36, 0.1); width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                            <svg viewBox="0 0 24 24" style="width: 20px; height: 20px; fill: var(--color-gold);"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+                        </div>
+                        <div style="flex: 1; min-width: 250px;">
+                            <h4 style="margin: 0; font-size: 0.9rem; font-weight: 700; color: var(--color-gold);">سلم تقويم ومؤشرات الرياضة الجماعية</h4>
+                            <p style="margin: 3px 0 0 0; font-size: 0.75rem; color: var(--text-secondary);">هذا السلم موحد ومعتمد رسمياً لتقييم جميع الرياضات الجماعية بالثانويات الجزائرية.</p>
+                        </div>
+                        <button type="button" id="btn-download-collective-rubric" class="btn-premium-action btn-gradient-emerald" style="padding: 10px 20px; border-radius: 8px; font-size: 0.85rem; display: flex; align-items: center; gap: 6px; font-weight: 700; border: none; cursor: pointer; color: #fff; background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                            <svg viewBox="0 0 24 24" style="width: 16px; height: 16px; fill: currentColor;"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
+                            <span>تحميل (Excel)</span>
+                        </button>
+                    </div>
+
+                    <div class="table-responsive" style="border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; background: rgba(0, 0, 0, 0.15); max-height: 450px; overflow-y: auto;">
+                        <table class="interactive-table" style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background: rgba(251, 191, 36, 0.05); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 10;">
+                                    <th style="width: 70px; text-align: center; padding: 12px; background: #141a2a;">الرمز</th>
+                                    <th style="width: 90px; text-align: center; padding: 12px; background: #141a2a;">النقطة</th>
+                                    <th style="width: 110px; text-align: center; padding: 12px; background: #141a2a;">التقدير</th>
+                                    <th style="text-align: right; padding: 12px; padding-right: 18px; background: #141a2a;">مؤشرات الأداء التقييمية</th>
+                                </tr>
+                            </thead>
+                            <tbody id="modal-collective-rubric-tbody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Footer Action Buttons -->
+            <div class="modal-footer-premium" style="background: rgba(255, 255, 255, 0.01); border-top: 1px solid var(--border-color); padding: 16px 24px; display: flex; justify-content: flex-end; gap: 12px; flex-wrap: wrap; align-items: center;">
+                <button type="button" class="btn btn-secondary" id="btn-print-all-scales" style="padding: 10px 20px; font-weight: 700; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); border: none; color: white; display: flex; align-items: center; gap: 6px; cursor: pointer; border-radius: 8px; font-size: 0.85rem; font-family: inherit;">
+                    <svg viewBox="0 0 24 24" style="width: 16px; height: 16px; fill: currentColor;"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/></svg>
+                    <span>طباعة السلم الشامل (فردي + جماعي)</span>
+                </button>
+                <div style="flex: 1;"></div>
+                <button type="button" class="btn btn-secondary" id="btn-cancel-scales" data-i18n="btn-close" style="padding: 10px 20px; font-weight: 600; display: flex; align-items: center; gap: 6px;">
+                    <svg viewBox="0 0 24 24" style="width: 16px; height: 16px; fill: currentColor;"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                    <span>إغلاق</span>
+                </button>
+                <button type="button" class="btn btn-primary" id="btn-save-scales-data" data-i18n="btn-confirm" style="padding: 10px 20px; font-weight: 600; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border: none; display: flex; align-items: center; gap: 6px;">
+                    <svg viewBox="0 0 24 24" style="width: 16px; height: 16px; fill: currentColor;"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                    <span>حفظ التعديلات</span>
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- 7. Collective Sport Rubric Modal -->
+    <div id="modal-collective-rubric" class="modal">
+        <div class="modal-content card-glow-gold" style="max-width: 750px; max-height: 85vh; overflow-y: auto;">
+            <div class="modal-header">
+                <h3 class="modal-title" style="color: var(--color-gold);">دليل سلم تقويم ومؤشرات الرياضة الجماعية</h3>
+                <span class="modal-close" id="modal-close-collective-rubric">&times;</span>
+            </div>
+            <div class="modal-body mt-4">
+                <div class="table-responsive">
+                    <table class="interactive-table" style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background: rgba(251, 191, 36, 0.1);">
+                                <th style="width: 70px; text-align: center;">الرمز</th>
+                                <th style="width: 90px; text-align: center;">النقطة (/20)</th>
+                                <th style="width: 100px; text-align: center;">التقدير</th>
+                                <th style="text-align: right; padding-right: 15px;">مؤشرات الأداء التقييمية</th>
+                            </tr>
+                        </thead>
+                        <tbody id="collective-rubric-tbody">
+                            <!-- Rubric rows populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="buttons-row justify-end mt-6">
+                    <button type="button" class="btn btn-secondary" id="btn-close-collective-rubric">إغلاق الدليل</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="toast">
+        <span id="toast-message">تمت العملية بنجاح!</span>
+    </div>
+
+    <!-- App Branding Footer -->
+    <footer style="text-align: center; padding: 20px; margin-top: 40px; border-top: 1px solid rgba(255,255,255,0.05); color: var(--text-muted); font-size: 0.85rem; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+        <div><strong style="color: var(--color-primary);">برنامج:</strong> <span style="font-family: 'Outfit', sans-serif; font-weight: 700; color: #fff;">Smart_Sport</span></div>
+        <div><strong style="color: var(--color-primary);">تاريخ الإصدار:</strong> <span style="font-family: 'Outfit', sans-serif; font-weight: 600;">Mai26</span></div>
+        <div><strong style="color: var(--color-primary);">المطور:</strong> <span style="font-family: 'Outfit', sans-serif; font-weight: 600;">Delbaz_Med</span></div>
+        <div id="footer-teacher-name" style="display: none;"><strong style="color: var(--color-primary);">الأستاذ(ة):</strong> <span id="footer-teacher-name-val" style="font-weight: 600;"></span></div>
+    </footer>
+
+    <script src="qrcode.min.js" charset="utf-8"></script>
+    <script src="app.js" charset="utf-8"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(reg => console.log('Service Worker registered successfully:', reg.scope))
+                    .catch(err => console.error('Service Worker registration failed:', err));
+            });
+        }
+    </script>
+</body>
+</html>
+
+
+
