@@ -1099,7 +1099,10 @@ html[lang="fr"] .toast {
 .flex-wrap { flex-wrap: wrap; }
 .flex-column { flex-direction: column; }
 
-/* Mobile Bottom Navigation Styles (Hidden on Desktop) */
+/* Mobile Header & Bottom Navigation Styles (Hidden on Desktop) */
+.mobile-top-header {
+    display: none;
+}
 .mobile-bottom-nav {
     display: none;
 }
@@ -1110,11 +1113,101 @@ html[lang="fr"] .toast {
         margin-right: 0 !important;
         margin-left: 0 !important;
         padding: 16px;
-        padding-bottom: 95px !important;
+        padding-top: 72px !important; /* space for mobile top bar */
+        padding-bottom: 95px !important; /* space for mobile bottom nav */
     }
     .sidebar {
         display: none !important;
     }
+    
+    /* Mobile Top Bar Styles */
+    .mobile-top-header {
+        display: flex !important;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 56px;
+        background-color: var(--bg-sidebar);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-bottom: 1px solid var(--border-color);
+        z-index: 1000;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+    .mobile-brand {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .mobile-logo {
+        width: 28px;
+        height: 28px;
+        border-radius: 6px;
+        border: 1.5px solid var(--color-gold);
+    }
+    .mobile-title {
+        font-family: var(--font-fr);
+        font-weight: 800;
+        font-size: 1.15rem;
+        color: var(--text-primary);
+        background: linear-gradient(135deg, var(--text-primary) 30%, var(--color-gold) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    .mobile-top-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .mobile-action-btn {
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 4px;
+        -webkit-tap-highlight-color: transparent;
+        transition: transform 0.2s ease;
+    }
+    .mobile-action-btn svg {
+        width: 20px;
+        height: 20px;
+        fill: currentColor;
+    }
+    .mobile-action-btn:active {
+        transform: scale(0.9);
+        color: var(--color-primary);
+    }
+    .mobile-action-btn-lang {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        color: var(--text-primary);
+        font-size: 0.72rem;
+        font-weight: 800;
+        padding: 4px 8px;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+        transition: all 0.2s ease;
+    }
+    .mobile-action-btn-lang:active {
+        background: rgba(255, 255, 255, 0.1);
+        transform: scale(0.95);
+        border-color: var(--color-gold);
+    }
+    
+    /* Desktop branding & undo buttons are replaced by mobile top bar actions */
+    .header-brand-title-top, #btn-undo-action {
+        display: none !important;
+    }
+
+    /* Mobile Bottom Nav Styles */
     .mobile-bottom-nav {
         display: flex !important;
         position: fixed;

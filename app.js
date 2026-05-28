@@ -643,6 +643,10 @@ class SmartSport {
             if (themeIcon) themeIcon.style.fill = "#3b82f6"; // blue moon
             if (themeText) themeText.textContent = this.currentLang === "ar" ? "تغيير لليل" : "Mode Nuit";
         }
+        const themeIconMobile = document.getElementById('theme-icon-mobile');
+        if (themeIconMobile) {
+            themeIconMobile.style.fill = this.theme === 'dark' ? '#fbbf24' : '#3b82f6';
+        }
     }
 
     toggleTheme() {
@@ -688,6 +692,11 @@ class SmartSport {
             if (translation) node.setAttribute("label", translation);
         });
 
+        const langMobile = document.getElementById('lang-toggle-mobile');
+        if (langMobile) {
+            langMobile.textContent = this.currentLang === 'ar' ? 'FR' : 'AR';
+        }
+
         this.applyTheme(); // Refresh theme text string
         this.updatePageTitle();
         this.renderActiveViewContent();
@@ -722,7 +731,7 @@ class SmartSport {
         this.activeTab = tabName;
         window.location.hash = tabName;
         
-        document.querySelectorAll(".menu-item").forEach(item => {
+        document.querySelectorAll(".menu-item, .mobile-nav-item").forEach(item => {
             if (item.getAttribute("data-tab") === tabName) {
                 item.classList.add("active");
             } else {
@@ -755,7 +764,7 @@ class SmartSport {
      */
     bindGlobalEvents() {
         // Sidebar Navigation links
-        document.querySelectorAll(".menu-item").forEach(item => {
+        document.querySelectorAll(".menu-item, .mobile-nav-item").forEach(item => {
             item.addEventListener("click", (e) => {
                 e.preventDefault();
                 this.switchTab(item.getAttribute("data-tab"));
@@ -784,6 +793,16 @@ class SmartSport {
 
         // Header controls (Manual, backup, restore, scales, undo)
         document.getElementById("theme-toggle-btn").addEventListener("click", () => this.toggleTheme());
+        
+        // Mobile Header actions
+        const btnUndoMobile = document.getElementById("btn-undo-mobile");
+        if (btnUndoMobile) btnUndoMobile.addEventListener("click", () => this.undo());
+
+        const themeToggleMobile = document.getElementById("theme-toggle-mobile");
+        if (themeToggleMobile) themeToggleMobile.addEventListener("click", () => this.toggleTheme());
+
+        const langToggleMobile = document.getElementById("lang-toggle-mobile");
+        if (langToggleMobile) langToggleMobile.addEventListener("click", () => this.toggleLanguage());
         
         // Lottery Event Listeners
         const lotterySelect = document.getElementById("lottery-class-select");
