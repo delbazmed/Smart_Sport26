@@ -1099,15 +1099,70 @@ html[lang="fr"] .toast {
 .flex-wrap { flex-wrap: wrap; }
 .flex-column { flex-direction: column; }
 
+/* Mobile Bottom Navigation Styles (Hidden on Desktop) */
+.mobile-bottom-nav {
+    display: none;
+}
+
 /* Responsive layout adjustments */
 @media (max-width: 1024px) {
     .main-content {
         margin-right: 0 !important;
         margin-left: 0 !important;
         padding: 16px;
+        padding-bottom: 95px !important;
     }
     .sidebar {
-        display: none; /* simple hidden sidebar on tablet for offline field simplicity, or slide-in */
+        display: none !important;
+    }
+    .mobile-bottom-nav {
+        display: flex !important;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 68px;
+        background-color: var(--bg-sidebar);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-top: 1px solid var(--border-color);
+        z-index: 1000;
+        justify-content: space-around;
+        align-items: center;
+        padding: 6px 10px;
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
+    }
+    .mobile-nav-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        flex: 1;
+        height: 100%;
+        color: var(--text-secondary);
+        text-decoration: none;
+        gap: 4px;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+    }
+    .mobile-nav-item.active {
+        color: var(--color-primary);
+    }
+    .mobile-nav-icon {
+        width: 22px;
+        height: 22px;
+        fill: currentColor;
+        transition: transform 0.2s ease;
+    }
+    .mobile-nav-item:active .mobile-nav-icon {
+        transform: scale(0.85);
+    }
+    .mobile-nav-text {
+        font-size: 0.65rem;
+        font-weight: 800;
+        text-align: center;
+        white-space: nowrap;
     }
 }
 
@@ -1121,13 +1176,84 @@ html[lang="fr"] .toast {
         justify-content: flex-start !important;
     }
     .action-btn-group {
-        width: 100%;
-        justify-content: center;
-        flex-wrap: wrap;
+        width: 100% !important;
+        display: flex !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        gap: 6px !important;
+        padding: 4px !important;
     }
     .action-btn-group button {
-        flex: 1;
-        min-width: 110px;
+        flex: 1 1 45% !important;
+        min-width: 0 !important;
+        padding: 8px 12px !important;
+        font-size: 0.78rem !important;
+    }
+    /* Metadata inputs layout vertical stacking */
+    .school-metadata-bar-premium {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 10px !important;
+    }
+    .meta-card-premium {
+        width: 100% !important;
+        flex: auto !important;
+    }
+    .header-brand-title-top {
+        margin: 6px auto !important; /* center branding on mobile */
+    }
+    /* Action Links 2-column Grid */
+    .header-action-links-premium {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 8px !important;
+        width: 100% !important;
+        margin-top: 10px !important;
+    }
+    .header-action-links-premium button {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 8px 10px !important;
+        font-size: 0.72rem !important;
+        border-radius: var(--border-radius-md) !important;
+        justify-content: center !important;
+    }
+    /* Panel responsiveness */
+    .panel {
+        padding: 14px !important;
+        gap: 14px !important;
+    }
+    /* Tables responsiveness details */
+    .interactive-table th, .interactive-table td {
+        padding: 8px 10px !important;
+        font-size: 0.78rem !important;
+        max-width: 150px !important;
+    }
+    /* Stats Grid */
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px !important;
+    }
+    .stat-card {
+        padding: 12px 8px !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+        gap: 6px !important;
+    }
+    .card-icon-container {
+        width: 38px !important;
+        height: 38px !important;
+    }
+    .card-icon {
+        width: 20px !important;
+        height: 20px !important;
+    }
+    .card-value {
+        font-size: 1.15rem !important;
+    }
+    .card-label {
+        font-size: 0.72rem !important;
     }
 }
 

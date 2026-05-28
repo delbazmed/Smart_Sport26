@@ -9,6 +9,12 @@
 const TRANSLATIONS = {
     ar: {
         "app-subtitle": "التربية البدنية والرياضية - الطور الثانوي",
+        "menu-dashboard-short": "الرئيسية",
+        "menu-students-short": "الأقسام",
+        "menu-grading-short": "التقويم",
+        "menu-pedagogical-tools-short": "الوسائل",
+        "menu-pedagogical-short": "الملف",
+        "menu-settings-short": "الإعدادات",
         "menu-dashboard": "لوحة القيادة",
         "menu-students": "الأقسام والتلاميذ",
         "menu-grading": "التقويم والنتائج",
@@ -129,6 +135,12 @@ const TRANSLATIONS = {
     },
     fr: {
         "app-subtitle": "Gestion de l'EPS - Enseignement Secondaire",
+        "menu-dashboard-short": "Accueil",
+        "menu-students-short": "Classes",
+        "menu-grading-short": "Notes",
+        "menu-pedagogical-tools-short": "Outils",
+        "menu-pedagogical-short": "Dossier",
+        "menu-settings-short": "R\u00e9glages",
         "menu-dashboard": "Tableau de bord",
         "menu-students": "Classes & Élèves",
         "menu-grading": "Notes & Évaluations",
