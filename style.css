@@ -1099,6 +1099,51 @@ html[lang="fr"] .toast {
 .flex-wrap { flex-wrap: wrap; }
 .flex-column { flex-direction: column; }
 
+/* Quick Links Styles */
+.quick-links-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 14px;
+}
+.quick-link-btn {
+    background: var(--bg-surface-solid);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-md);
+    padding: 14px;
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    font-size: 0.82rem;
+    font-family: inherit;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+.quick-link-btn svg {
+    width: 24px;
+    height: 24px;
+    fill: var(--color-primary);
+    transition: transform 0.2s ease;
+}
+.quick-link-btn:hover {
+    border-color: var(--color-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(16, 185, 129, 0.15);
+}
+.quick-link-btn:active {
+    transform: scale(0.95);
+}
+
+@media (max-width: 576px) {
+    .quick-links-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 /* Mobile Header & Bottom Navigation Styles (Hidden on Desktop) */
 .mobile-top-header {
     display: none;
@@ -1260,28 +1305,60 @@ html[lang="fr"] .toast {
 }
 
 @media (max-width: 768px) {
+    /* Top Bar Actions & Metadata */
     .action-bar-top {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 16px;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 12px !important;
     }
+    
+    /* General Form Rows Stacking */
+    .form-row {
+        flex-direction: column !important;
+        gap: 10px !important;
+    }
+    .form-row .form-group {
+        width: 100% !important;
+        flex: 1 1 100% !important;
+    }
+
+    /* Buttons Row Stacking */
     .buttons-row {
-        justify-content: flex-start !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        width: 100% !important;
+        gap: 8px !important;
     }
-    .action-btn-group {
+    .buttons-row button, .buttons-row a {
+        width: 100% !important;
+        margin: 0 !important;
+        justify-content: center !important;
+    }
+
+    /* Roster Info Widgets */
+    .roster-info-widgets {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 12px !important;
+        width: 100% !important;
+    }
+    .roster-info-widgets > div {
         width: 100% !important;
         display: flex !important;
+        flex-direction: column !important;
+        gap: 8px !important;
+    }
+    .roster-stats {
+        display: flex !important;
         flex-wrap: wrap !important;
-        justify-content: center !important;
         gap: 6px !important;
-        padding: 4px !important;
+        width: 100% !important;
     }
-    .action-btn-group button {
-        flex: 1 1 45% !important;
-        min-width: 0 !important;
-        padding: 8px 12px !important;
-        font-size: 0.78rem !important;
+    .roster-info-widgets button {
+        width: 100% !important;
+        justify-content: center !important;
     }
+
     /* Metadata inputs layout vertical stacking */
     .school-metadata-bar-premium {
         flex-direction: column !important;
@@ -1295,6 +1372,7 @@ html[lang="fr"] .toast {
     .header-brand-title-top {
         margin: 6px auto !important; /* center branding on mobile */
     }
+
     /* Action Links 2-column Grid */
     .header-action-links-premium {
         display: grid !important;
@@ -1311,42 +1389,210 @@ html[lang="fr"] .toast {
         border-radius: var(--border-radius-md) !important;
         justify-content: center !important;
     }
+
+    /* Premium Toolbar Responsiveness */
+    .premium-toolbar {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 12px !important;
+        padding: 12px !important;
+    }
+    .toolbar-divider {
+        display: none !important;
+    }
+    .toolbar-class-select-group {
+        justify-content: space-between !important;
+        width: 100% !important;
+    }
+    .styled-select-premium {
+        max-width: 100% !important;
+        flex-grow: 1 !important;
+    }
+    .toolbar-actions-group {
+        justify-content: center !important;
+        gap: 8px !important;
+        width: 100% !important;
+    }
+    /* Restructure the 4 large student/class action buttons as a 2x2 grid */
+    .premium-toolbar .toolbar-actions-group:last-of-type {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 8px !important;
+        width: 100% !important;
+    }
+    .premium-toolbar .toolbar-actions-group:last-of-type button {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 10px 8px !important;
+        font-size: 0.78rem !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        justify-content: center !important;
+    }
+
+    /* Sports display cards vertical stack */
+    .sports-display-info-premium {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        width: 100% !important;
+        gap: 8px !important;
+        margin: 10px 0 !important;
+    }
+    .sport-card-premium {
+        width: 100% !important;
+        margin: 0 !important;
+    }
+
     /* Panel responsiveness */
     .panel {
-        padding: 14px !important;
-        gap: 14px !important;
+        padding: 12px !important;
+        gap: 12px !important;
     }
+    .dashboard-grid {
+        flex-direction: column !important;
+        gap: 16px !important;
+    }
+    .dashboard-grid .panel {
+        width: 100% !important;
+    }
+
+    /* Tab bars horizontal scrolling behavior (Cahier journal, evaluation types, etc.) */
+    .grading-tabs-container, 
+    .pedagogical-tabs-bar,
+    .scale-modal-tabs {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        gap: 8px !important;
+        padding-bottom: 6px !important;
+        margin-bottom: 12px !important;
+        border-bottom: 1px solid var(--border-color) !important;
+    }
+    .grading-tab-btn, 
+    .ped-tab-btn,
+    .scale-tab-btn {
+        flex-shrink: 0 !important;
+        white-space: nowrap !important;
+        padding: 8px 12px !important;
+        font-size: 0.8rem !important;
+    }
+
+    /* Multi-lane stopwatch 2x2 layout instead of huge 1-column list */
+    .stopwatch-grid-multi {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 8px !important;
+        margin-top: 12px !important;
+    }
+    .lane-card {
+        min-height: 165px !important;
+        padding: 10px !important;
+        gap: 6px !important;
+        justify-content: flex-start !important;
+    }
+    .lane-title {
+        font-size: 0.85rem !important;
+    }
+    .lane-student-select.styled-select {
+        font-size: 0.72rem !important;
+        padding: 4px 6px !important;
+        width: 100% !important;
+    }
+    .lane-timer-display {
+        font-size: 1.45rem !important;
+        margin: 4px 0 !important;
+    }
+    .lane-touch-pad {
+        font-size: 0.7rem !important;
+        padding: 6px !important;
+        height: 44px !important;
+    }
+
+    /* Single Stopwatch mobile formatting */
+    #stopwatch-single-card.lane-card {
+        min-height: 220px !important;
+        padding: 15px !important;
+    }
+    #stopwatch-single-card .lane-timer-display.font-giant {
+        font-size: 3rem !important;
+    }
+
+    /* Settings rows responsiveness */
+    .setting-row-premium {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 12px !important;
+        padding: 12px 0 !important;
+        border-bottom: 1px solid var(--border-color) !important;
+    }
+    .setting-info-premium {
+        min-width: 0 !important;
+    }
+    .setting-control-premium {
+        width: 100% !important;
+        display: flex !important;
+        justify-content: flex-end !important;
+    }
+    .setting-control-premium .styled-select {
+        width: 100% !important;
+    }
+    .setting-actions-premium {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+        gap: 8px !important;
+        margin-top: 8px !important;
+    }
+    .setting-actions-premium button {
+        width: 100% !important;
+        justify-content: center !important;
+    }
+
     /* Tables responsiveness details */
     .interactive-table th, .interactive-table td {
-        padding: 8px 10px !important;
-        font-size: 0.78rem !important;
-        max-width: 150px !important;
+        padding: 6px 8px !important;
+        font-size: 0.75rem !important;
+        max-width: 120px !important;
     }
+
     /* Stats Grid */
     .stats-grid {
         grid-template-columns: repeat(2, 1fr) !important;
-        gap: 12px !important;
+        gap: 10px !important;
     }
     .stat-card {
-        padding: 12px 8px !important;
+        padding: 10px 6px !important;
         flex-direction: column !important;
         align-items: center !important;
         text-align: center !important;
-        gap: 6px !important;
+        gap: 4px !important;
     }
     .card-icon-container {
-        width: 38px !important;
-        height: 38px !important;
+        width: 32px !important;
+        height: 32px !important;
     }
     .card-icon {
-        width: 20px !important;
-        height: 20px !important;
+        width: 16px !important;
+        height: 16px !important;
     }
     .card-value {
-        font-size: 1.15rem !important;
+        font-size: 1rem !important;
     }
     .card-label {
-        font-size: 0.72rem !important;
+        font-size: 0.68rem !important;
+    }
+
+    /* Modal responsiveness */
+    .modal {
+        padding: 10px !important;
+    }
+    .modal-content {
+        max-height: 92vh !important;
+        overflow-y: auto !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 16px !important;
     }
 }
 
@@ -2009,31 +2255,6 @@ html[lang="fr"] .toast {
     }
 }
 
-@media (max-width: 768px) {
-    .premium-toolbar {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 12px;
-        padding: 16px;
-    }
-    .toolbar-divider {
-        display: none;
-    }
-    .toolbar-class-select-group {
-        justify-content: space-between;
-    }
-    .styled-select-premium {
-        max-width: 100%;
-        flex-grow: 1;
-    }
-    .toolbar-actions-group {
-        justify-content: flex-start;
-        gap: 8px;
-    }
-    .toolbar-actions-group button {
-        flex-grow: 1;
-    }
-}
 
 /* Pedagogical Sub-Tabs and Custom Controls */
 .ped-tab-btn {
@@ -2598,6 +2819,58 @@ html[lang="fr"] .toast {
 /* Dim overall row when frozen */
 .locked-row-dim {
     background-color: rgba(15, 23, 42, 0.2) !important;
+}
+
+@media (max-width: 480px) {
+    .main-content {
+        padding: 10px !important;
+        padding-top: 68px !important;
+        padding-bottom: 84px !important;
+        gap: 12px !important;
+    }
+    .panel {
+        padding: 10px !important;
+        gap: 10px !important;
+        border-radius: 8px !important;
+    }
+    .panel-title {
+        font-size: 0.95rem !important;
+    }
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 8px !important;
+    }
+    .stat-card {
+        padding: 8px 4px !important;
+    }
+    .card-value {
+        font-size: 0.9rem !important;
+    }
+    .card-label {
+        font-size: 0.62rem !important;
+    }
+    .interactive-table th, .interactive-table td {
+        padding: 5px 6px !important;
+        font-size: 0.7rem !important;
+    }
+    .mobile-top-header {
+        height: 52px !important;
+        padding: 0 12px !important;
+    }
+    .mobile-title {
+        font-size: 1rem !important;
+    }
+    .mobile-bottom-nav {
+        height: 60px !important;
+        padding: 4px 6px !important;
+    }
+    .mobile-nav-icon {
+        width: 18px !important;
+        height: 18px !important;
+    }
+    .mobile-nav-text {
+        font-size: 0.6rem !important;
+    }
 }
 
 
